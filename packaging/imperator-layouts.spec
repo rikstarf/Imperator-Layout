@@ -7,7 +7,7 @@
 
 Name:           imperator-layouts
 Version:        1.4.0
-Release:        1%{?dist}
+Release:        1
 Summary:        Imperator desktop layouts (macOS-like, Windows 11-like, ChromeOS-like) for GNOME
 License:        GPL-2.0-or-later AND GPL-2.0-only AND GPL-3.0-or-later
 URL:            https://github.com/rikstarf/Imperator-Layout

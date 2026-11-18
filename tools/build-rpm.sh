@@ -26,5 +26,6 @@ args=(-bb --define "_topdir $TOP")
 rpmbuild "${args[@]}" "$SPEC"
 
 mkdir -p "$ROOT/dist"
+rm -f "$ROOT"/dist/imperator-layouts-*.rpm
 cp "$TOP"/RPMS/noarch/*.rpm "$ROOT/dist/"
 ls -l "$ROOT"/dist/*.rpm
