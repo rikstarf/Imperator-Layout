@@ -18,7 +18,7 @@ for dir in "$HERE"/vendor/extensions/*/ "$HERE"/extensions/*/; do
   echo "staged: $uuid"
 done
 
-# Overrides: whole files replace the vendored ones (GNOME 51 fixes, Zorin branding removal; see vendor/NOTICE.md).
+# Overrides: whole files replace the vendored ones (GNOME 51 fixes, downstream branding removal; see vendor/NOTICE.md).
 for odir in "$HERE"/overrides/*/; do
   [[ -d "$odir" ]] || continue
   uuid="$(basename "$odir")"
