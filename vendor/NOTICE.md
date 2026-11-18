@@ -16,6 +16,8 @@ included unmodified except for the trimmed and replaced files listed below; `ins
 | light-style 51.0 (`light-style@gnome-shell-extensions.gcampax.github.com`) | Florian Müllner and GNOME contributors (gnome-shell-extensions tag 51.0, https://gitlab.gnome.org/GNOME/gnome-shell-extensions); GPL-2.0-or-later per its SPDX header. `metadata.json` generated the way the upstream meson build does (Shell 51 only, no settings schema, which this extension does not have) |
 | arcmenu 70.0 | ArcMenu Team (https://gitlab.com/arcmenu/ArcMenu); GPL v2 text in its LICENSE, the app's About page says "version 2 or later". Its README and About page mention that it started as a fork of the Zorin menu; that history stays |
 
+`vendor/versions.tsv` records the version of each vendored extension for `tools/check-upstream.sh`; keep it in step with the table above.
+
 The GPL-2.0 text is in `vendor/COPYING` (copied from ArcMenu's LICENSE; ArcMenu also keeps its own copy in its folder).
 
 ## Removed files

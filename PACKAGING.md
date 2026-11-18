@@ -138,3 +138,18 @@ Install a newer RPM with `rpm-ostree uninstall imperator-layouts && rpm-ostree i
 with a layout is re-applied once if the release (MAJOR.MINOR) changed, so new profile values reach them; a hotfix (1.3.0 -> 1.3.1) changes
 nothing for the user. Check with `cat ~/.config/imperator-layouts/release` and `journalctl -b -t imperator-layouts`.
 Before uninstalling for good, run `imperator-layout gnome` (resets our settings and removes the glass block from gtk.css).
+
+## Before each new GNOME major (the update gate)
+
+The spec holds the package on the GNOME it was tested on (`Requires: gnome-shell >= 51` and `< 52`), so a Fedora upgrade cannot pull
+users onto a GNOME the bundled extensions have not been vetted for. Start preparing as soon as the next GNOME has a beta:
+
+```
+tools/check-upstream.sh              # target = the spec's upper bound (52 today); or --target N
+```
+
+It lists, per extension, whether the metadata we ship declares the new version, which upstream release supports it, and whether one
+build serves both the current and the new GNOME (the seamless case). It needs network access (run it on a normal machine). Versions
+it compares against live in `vendor/versions.tsv`: update that file and the table in `vendor/NOTICE.md` whenever an extension is
+re-vendored. Then test on a VM with the new GNOME (layouts, glass on and off, light and dark, lock, multi-monitor, suspend), raise the
+gate, publish.
