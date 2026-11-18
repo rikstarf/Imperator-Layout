@@ -6,7 +6,7 @@
 %global extdir %{_datadir}/gnome-shell/extensions
 
 Name:           imperator-layouts
-Version:        1.4.0
+Version:        1.4.1
 Release:        1
 Summary:        Imperator desktop layouts (macOS-like, Windows 11-like, ChromeOS-like) for GNOME
 License:        GPL-2.0-or-later AND GPL-2.0-only AND GPL-3.0-or-later
@@ -22,6 +22,14 @@ Requires:       dconf
 Requires:       glib2
 Requires:       gjs
 Requires:       libadwaita
+# Fedora's own packages of extensions we bundle (same directories under /usr/share/gnome-shell/extensions): refuse cleanly
+# instead of failing on a file conflict.
+Conflicts:      gnome-shell-extension-appindicator
+Conflicts:      gnome-shell-extension-blur-my-shell
+Conflicts:      gnome-shell-extension-dash-to-dock
+Conflicts:      gnome-shell-extension-dash-to-panel
+Conflicts:      gnome-shell-extension-light-style
+Conflicts:      gnome-shell-extension-logo-menu
 
 %description
 Vanilla GNOME plus three desktop layouts (and an optional glass effect) (macOS-like, Windows 11-like, ChromeOS-like) built from upstream GPL extensions (Dash to
@@ -82,6 +90,11 @@ install -Dpm 0644 packaging/RPM-GPG-KEY-imperator %{buildroot}%{_sysconfdir}/pki
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-imperator
 
 %changelog
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.4.1-1
+- Picker: Updates row that opens GNOME Software's updates page (English and Spanish)
+- README: supported systems
+- Conflicts with Fedora's own packages of the bundled extensions (appindicator, blur-my-shell, dash-to-dock, dash-to-panel, light-style, logo-menu)
+
 * Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.4.0-1
 - Updates from a signed RPM repo: ships imperator.repo and the release public key, so rpm-ostree upgrade / dnf upgrade pick up new releases
 - Requires gnome-shell >= 51 and < 52: refuses an untested GNOME major until a vetted release is published

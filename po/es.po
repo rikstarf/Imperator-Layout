@@ -5,7 +5,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: imperator-layouts\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-18 06:10+0000\n"
+"POT-Creation-Date: 2026-11-18 16:07+0000\n"
 "PO-Revision-Date: 2026-11-18 04:30+0000\n"
 "Last-Translator: Imperator Solutions\n"
 "Language-Team: Spanish\n"
@@ -76,34 +76,62 @@ msgstr ""
 "Desenfoque detrás del dock, los menús y la vista general, y una barra "
 "superior transparente."
 
-#: imperator-layout-ui:158
+#: imperator-layout-ui:108
+msgid "Updates"
+msgstr "Actualizaciones"
+
+#: imperator-layout-ui:110
+msgid "Software updates"
+msgstr "Actualizaciones de software"
+
+#: imperator-layout-ui:111
+msgid "New versions of these layouts arrive with your system updates."
+msgstr "Las nuevas versiones de estos diseños llegan con las actualizaciones del sistema."
+
+#: imperator-layout-ui:113
+msgid "Open"
+msgstr "Abrir"
+
+#: imperator-layout-ui:168
 #, javascript-format
 msgid "Could not run imperator-layout: %s"
 msgstr "No se pudo ejecutar imperator-layout: %s"
 
-#: imperator-layout-ui:186
+#: imperator-layout-ui:196
 msgid "Layout applied"
 msgstr "Diseño aplicado"
 
-#: imperator-layout-ui:186
+#: imperator-layout-ui:196
 #, javascript-format
 msgid "Could not apply layout: %s"
 msgstr "No se pudo aplicar el diseño: %s"
 
-#: imperator-layout-ui:188
+#: imperator-layout-ui:198
 msgid "Transparency applied"
 msgstr "Transparencia aplicada"
 
-#: imperator-layout-ui:188
+#: imperator-layout-ui:198
 #, javascript-format
 msgid "Could not apply transparency: %s"
 msgstr "No se pudo aplicar la transparencia: %s"
 
-#: imperator-layout-ui:192
-msgid "Glass changed. Files was closed to apply it; reopen other apps to see it."
-msgstr "Efecto cristal cambiado. Se cerró Archivos para aplicarlo; vuelve a abrir las demás aplicaciones para ver el cambio."
+#: imperator-layout-ui:202
+msgid ""
+"Glass changed. Files was closed to apply it; reopen other apps to see it."
+msgstr ""
+"Efecto cristal cambiado. Se cerró Archivos para aplicarlo; vuelve a abrir "
+"las demás aplicaciones para ver el cambio."
 
-#: imperator-layout-ui:192
+#: imperator-layout-ui:202
 #, javascript-format
 msgid "Could not apply glass: %s"
 msgstr "No se pudo aplicar el efecto cristal: %s"
+
+#: imperator-layout-ui:207
+msgid "GNOME Software is not installed."
+msgstr "GNOME Software no está instalado."
+
+#: imperator-layout-ui:213
+#, javascript-format
+msgid "Could not open GNOME Software: %s"
+msgstr "No se pudo abrir GNOME Software: %s"

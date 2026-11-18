@@ -105,9 +105,19 @@ app.connect('activate', () => {
         subtitle: _('Blur behind the dock, menus and overview, and a see-through top bar.'),
     });
     glassGroup.add(glassRow);
+    const updatesGroup = new Adw.PreferencesGroup({title: _('Updates')});
+    const updatesRow = new Adw.ActionRow({
+        title: _('Software updates'),
+        subtitle: _('New versions of these layouts arrive with your system updates.'),
+    });
+    const updatesButton = new Gtk.Button({label: _('Open'), valign: Gtk.Align.CENTER});
+    updatesRow.add_suffix(updatesButton);
+    updatesRow.set_activatable_widget(updatesButton);
+    updatesGroup.add(updatesRow);
     page.add(layoutGroup);
     page.add(glassGroup);
     page.add(opacityGroup);
+    page.add(updatesGroup);
     view.set_content(page);
     toasts.set_child(view);
     win.set_content(toasts);
@@ -190,6 +200,18 @@ app.connect('activate', () => {
     glassRow.connect('notify::active', row => {
         if (!updating)
             apply(['glass', row.active ? 'on' : 'off'], _('Glass changed. Files was closed to apply it; reopen other apps to see it.'), _('Could not apply glass: %s'));
+    });
+
+    updatesButton.connect('clicked', () => {
+        if (!GLib.find_program_in_path('gnome-software')) {
+            toast(_('GNOME Software is not installed.'), 6);
+            return;
+        }
+        try {
+            Gio.Subprocess.new(['gnome-software', '--mode', 'updates'], Gio.SubprocessFlags.NONE);
+        } catch (e) {
+            toast(_('Could not open GNOME Software: %s').replace('%s', e.message), 10);
+        }
     });
 
     win.present();

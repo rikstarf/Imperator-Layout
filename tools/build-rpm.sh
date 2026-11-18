@@ -26,6 +26,6 @@ args=(-bb --define "_topdir $TOP")
 rpmbuild "${args[@]}" "$SPEC"
 
 mkdir -p "$ROOT/dist"
-rm -f "$ROOT"/dist/imperator-layouts-*.rpm
+rm -f "$ROOT"/dist/imperator-layouts-*.rpm   # no stale builds next to the new one
 cp "$TOP"/RPMS/noarch/*.rpm "$ROOT/dist/"
 ls -l "$ROOT"/dist/*.rpm

@@ -3,6 +3,12 @@
 Vanilla GNOME (the default) plus three layouts (macOS-like, Windows 11-like, ChromeOS-like), built from upstream GPL extensions
 (Dash to Dock, Dash to Panel, ArcMenu, Logo Menu, AppMenu, AppIndicator, Light Style) plus two of our own. Design: `DESIGN.md`; licenses and file-level changes: `vendor/NOTICE.md`; packaging: `PACKAGING.md`.
 
+## Supported systems
+
+Fedora Silverblue and Fedora Workstation with GNOME 51 (the package requires `gnome-shell >= 51` and `< 52`). It is not tested on Universal
+Blue images (Bluefin, Bazzite), which bake some of the same extensions into the image; if you want it there, fork the repo and drop the
+overlapping extensions from the build (`vendor/extensions/` and the extension sets in `imperator-layout`).
+
 ## Use
 
     sudo rpm-ostree install ./imperator-layouts-<version>.noarch.rpm   # from the USB; then reboot (see PACKAGING.md)
