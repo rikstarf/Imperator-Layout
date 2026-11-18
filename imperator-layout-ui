@@ -97,12 +97,12 @@ app.connect('activate', () => {
     });
     const opacityGroup = new Adw.PreferencesGroup({
         title: _('Transparency'),
-        description: _('Applies to the dock or taskbar of the chosen layout.'),
+        description: _('Applies to the dock or taskbar of the chosen layout. Locked while the glass effect is on.'),
     });
     const glassGroup = new Adw.PreferencesGroup();
     const glassRow = new Adw.SwitchRow({
         title: _('Glass effect'),
-        subtitle: _('Blur behind the dock, menus and overview, and a see-through top bar.'),
+        subtitle: _('macOS layout only. Blur behind the dock, menus, windows and overview, and a see-through top bar.'),
     });
     glassGroup.add(glassRow);
     const updatesGroup = new Adw.PreferencesGroup({title: _('Updates')});
@@ -150,10 +150,11 @@ app.connect('activate', () => {
         updating = true;
         layoutButtons.get(layout).active = true;
         opacityButtons.get(opacity).active = true;
+        glass = glass && layout === 'macos';
         glassRow.active = glass;
         updating = false;
-        glassGroup.sensitive = layout !== 'gnome';   // blur and the glass top bar come from our extensions
-        opacityGroup.sensitive = layout !== 'gnome';   // vanilla GNOME has no dock or taskbar of ours
+        glassGroup.sensitive = layout === 'macos';   // glass is part of the macOS look only
+        opacityGroup.sensitive = layout !== 'gnome' && !glass;   // vanilla GNOME has no dock of ours; glass owns the opacity
     }
 
     async function apply(args, okMessage, failMessage) {

@@ -63,18 +63,20 @@ msgid "Transparency"
 msgstr "Transparencia"
 
 #: imperator-layout-ui:100
-msgid "Applies to the dock or taskbar of the chosen layout."
-msgstr "Se aplica al dock o a la barra de tareas del diseño elegido."
+msgid "Applies to the dock or taskbar of the chosen layout. Locked while the glass effect is on."
+msgstr ""
+"Se aplica al dock o a la barra de tareas del diseño elegido. Bloqueado mientras "
+"el efecto cristal está activo."
 
 #: imperator-layout-ui:104
 msgid "Glass effect"
 msgstr "Efecto cristal"
 
 #: imperator-layout-ui:105
-msgid "Blur behind the dock, menus and overview, and a see-through top bar."
+msgid "macOS layout only. Blur behind the dock, menus, windows and overview, and a see-through top bar."
 msgstr ""
-"Desenfoque detrás del dock, los menús y la vista general, y una barra "
-"superior transparente."
+"Solo en el diseño macOS. Desenfoque detrás del dock, los menús, las ventanas "
+"y la vista general, y una barra superior transparente."
 
 #: imperator-layout-ui:108
 msgid "Updates"

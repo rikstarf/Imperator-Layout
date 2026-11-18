@@ -66,7 +66,7 @@ msgid "Transparency"
 msgstr ""
 
 #: imperator-layout-ui:100
-msgid "Applies to the dock or taskbar of the chosen layout."
+msgid "Applies to the dock or taskbar of the chosen layout. Locked while the glass effect is on."
 msgstr ""
 
 #: imperator-layout-ui:104
@@ -74,7 +74,7 @@ msgid "Glass effect"
 msgstr ""
 
 #: imperator-layout-ui:105
-msgid "Blur behind the dock, menus and overview, and a see-through top bar."
+msgid "macOS layout only. Blur behind the dock, menus, windows and overview, and a see-through top bar."
 msgstr ""
 
 #: imperator-layout-ui:108

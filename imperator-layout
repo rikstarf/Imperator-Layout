@@ -59,7 +59,7 @@ done
 status() {
   echo "layout      : $(current)"
   echo "transparency: $(opacity_current)"
-  echo "glass       : $(glass_current)"
+  echo "glass       : $(glass_current)$([[ "$(glass_current)" == on && "$(current)" != macos ]] && echo " (inactive: macos layout only)")"
   echo "buttons     : $(gsettings get org.gnome.desktop.wm.preferences button-layout)"
   echo "scheme      : $(gsettings get org.gnome.desktop.interface color-scheme)"
   echo "enabled     : $(gsettings get org.gnome.shell enabled-extensions)"
@@ -122,7 +122,7 @@ layout_extensions() {
   local extras
   read -ra extras <<<"${EXTRA[$1]}"
   ENABLED=("${COMMON[@]}" "${extras[@]}")
-  [[ "$(glass_current)" == on ]] && ENABLED+=("$BLUR")
+  if glass_active "$1"; then ENABLED+=("$BLUR"); fi
   return 0
 }
 
@@ -130,6 +130,11 @@ layout_extensions() {
 # transparency presets. layouts/glass.dconf is common; layouts/glass-<layout>.dconf holds per-layout differences.
 glass_current() {
   cat "$GLASS_STATE" 2>/dev/null || echo off
+}
+
+# Glass belongs to the macos layout only. The switch is remembered, but it only does anything while that layout is applied.
+glass_active() {
+  [[ "$(glass_current)" == on && "$1" == macos ]]
 }
 
 load_glass_profiles() {
@@ -187,10 +192,11 @@ glass() {
   local state="$1" layout
   [[ "$state" == on || "$state" == off ]] || die "usage: imperator-layout glass [on|off]"
   layout="$(current)"
+  [[ "$state" == off || "$layout" == macos ]] || die "glass is only available on the macos layout (current layout: $layout)"
   mkdir -p "$STATE_DIR"
   echo "$state" > "$GLASS_STATE"
   if [[ "$layout" == none || "$layout" == gnome ]]; then
-    echo "Glass: $state (takes effect once a layout is applied; vanilla GNOME has none of our extensions)"
+    echo "Glass: $state"
     return 0
   fi
   if [[ "$state" == on ]]; then
@@ -226,6 +232,7 @@ apply_opacity() {
 opacity() {
   [[ $# -eq 0 ]] && { opacity_current; return 0; }
   case "$1" in solid|soft|clear) ;; *) die "unknown transparency preset '$1' (solid|soft|clear)" ;; esac
+  glass_active "$(current)" && die "transparency is locked while glass is on (glass owns the dock and top bar opacity)"
   mkdir -p "$STATE_DIR"
   echo "$1" > "$OPACITY_STATE"
   if [[ "$(current)" == none || "$(current)" == gnome ]]; then
@@ -233,10 +240,6 @@ opacity() {
     return 0
   fi
   apply_opacity "$1"
-  # While glass is on it owns the dock/taskbar/top bar transparency: put it back on top of the preset.
-  if [[ "$(glass_current)" == on && "$(current)" != none && "$(current)" != gnome ]]; then
-    load_glass_profiles "$(current)"
-  fi
   echo "Transparency: $1"
 }
 
@@ -286,7 +289,7 @@ apply() {
   # The transparency preset and glass are the user's own choices: put them back on top of the new layout. Glass goes last because
   # it owns the dock/taskbar/top bar transparency while it is on.
   apply_opacity "$(opacity_current)"
-  if [[ "$(glass_current)" == on ]]; then
+  if glass_active "$name"; then
     load_glass_profiles "$name"
   else
     unload_glass_profiles

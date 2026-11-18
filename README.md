@@ -40,7 +40,7 @@ already vanilla GNOME, which is why "no site default" means vanilla.
 color: the color always comes from the theme (and so follows light/dark). Presets apply to Dash to Dock, Dash to Panel and the stock top panel (macOS layout; the dock-theme extension sets only the alpha
 on top of the theme's own panel color, and leaves the overview and lock screen alone). The chosen preset is kept across layout switches.
 
-**Glass effect** (`imperator-layout glass on|off`, a switch in the picker): turns on Blur My Shell (backdrop blur behind the dock or
+**Glass effect** (`imperator-layout glass on|off`, a switch in the picker; macOS layout only, and the transparency presets are locked while it is on): turns on Blur My Shell (backdrop blur behind the dock or
 taskbar, quick settings, menus, calendar and the overview) and `imperator-dock-theme`'s glass look: a fully see-through top bar
 with white text and a soft shadow, and a light rim on the dock. It also blurs the space behind every application window and makes the window *backgrounds* translucent (not the text or icons):
 the switch writes a marked block into `~/.config/gtk-4.0/gtk.css` and `gtk-3.0/gtk.css`, removed again by turning glass off.
