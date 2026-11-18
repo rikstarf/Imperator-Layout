@@ -1,9 +1,10 @@
 # Vendored upstream extensions: uuid, version we ship, where upstream releases are published. Read by tools/check-upstream.sh.
 # ego = extensions.gnome.org (version is its integer version, as in metadata.json "version" or the upstream tag number).
+# github = a GitHub repo (4th column owner/name): its metadata.json on the default branch is read. Used for extensions not published on EGO.
 # gnome = GNOME gitlab gnome-shell-extensions tags (light-style ships with the GNOME release, tag = shell version).
 # Update the version column whenever an extension is re-vendored (and the table in NOTICE.md).
 appindicatorsupport@rgcjonas.gmail.com	66	ego
-appmenu@ChathurangaBW.github.io	17	ego
+appmenu@ChathurangaBW.github.io	17	github	ChathurangaBW/AppMenu
 arcmenu@arcmenu.com	74	ego
 blur-my-shell@aunetx	78	ego
 dash-to-dock@micxgx.gmail.com	110	ego

@@ -64,8 +64,8 @@ for d in sorted(glob.glob(f"{here}/vendor/extensions/*/") + glob.glob(f"{here}/e
 sources = {}
 for line in open(f"{here}/vendor/versions.tsv"):
     if line.strip() and not line.startswith("#"):
-        uuid, version, src = line.rstrip("\n").split("\t")
-        sources[uuid] = (version, src)
+        parts = line.rstrip("\n").split("\t")
+        sources[parts[0]] = (parts[1], parts[2], parts[3] if len(parts) > 3 else None)
 
 rows, blockers, unknown = [], 0, 0
 for uuid, s in shipped.items():
@@ -75,7 +75,7 @@ for uuid, s in shipped.items():
         if not declares_target:
             blockers += 1
         continue
-    version, src = sources.get(uuid, (None, None))
+    version, src, repo = sources.get(uuid, (None, None, None))
     if src is None:
         rows.append((uuid, "?", "?", "yes" if declares_target else "NO", "?", "not listed in vendor/versions.tsv"))
         blockers += 1
@@ -93,24 +93,45 @@ for uuid, s in shipped.items():
                             best = n
                 return best
             up_target, up_current = latest(target), latest(current)
+            upstream_max = max((int(k.split(".")[0]) for k in vmap if k.split(".")[0].isdigit()), default=None)
+        elif src == "github":
+            meta = None
+            for path in ("metadata.json", "src/metadata.json"):
+                try:
+                    meta = fetch(f"https://raw.githubusercontent.com/{repo}/HEAD/{path}", f"{uuid}.metadata.json")
+                    break
+                except urllib.error.HTTPError as e:
+                    if e.code != 404:
+                        raise
+            if meta is None:
+                rows.append((uuid, version, "?", "yes" if declares_target else "NO", "-", f"CHECK MANUALLY: https://github.com/{repo} (metadata.json not found)"))
+                unknown += 1
+                continue
+            up_decl = [str(v) for v in meta.get("shell-version", [])]
+            up_target = str(meta.get("version", "?")) if (target in up_decl or any(v.split(".")[0] == target for v in up_decl)) else None
+            up_current = str(meta.get("version", "?"))
+            upstream_max = max((int(v.split(".")[0]) for v in up_decl if v.split(".")[0].isdigit()), default=None)
         else:  # gnome gitlab tags: <shell version>.<patch>, plus alpha/beta/rc
             tags = fetch("https://gitlab.gnome.org/api/v4/projects/GNOME%2Fgnome-shell-extensions/repository/tags?search=" + target,
                          f"gnome-tags-{target}.json")
             names = [t["name"] for t in tags if t["name"].startswith(target + ".")]
             up_target = sorted(names)[-1] if names else None
             up_current = version
+            upstream_max = None
     except (urllib.error.URLError, OSError, ValueError, KeyError) as e:
-        rows.append((uuid, version, "?", "yes" if declares_target else "NO", "?", f"UNKNOWN ({type(e).__name__})"))
+        what = "not found upstream (HTTP 404)" if getattr(e, "code", None) == 404 else f"UNKNOWN ({type(e).__name__})"
+        rows.append((uuid, version, "?", "yes" if declares_target else "NO", "?", what))
         unknown += 1
         continue
     if up_target is None:
-        verdict = "WAIT: no upstream release for GNOME " + target + " yet" if not declares_target else "READY (declared; upstream list has no " + target + " build, verify)"
+        newest = f"newest supported is GNOME {upstream_max}" if upstream_max else "no newer build listed"
+        verdict = f"WAIT: nothing for GNOME {target} yet ({newest})" if not declares_target else "READY (declared; upstream list has no " + target + " build, verify)"
         if not declares_target:
             blockers += 1
         rows.append((uuid, version, "none", "yes" if declares_target else "NO", "-", verdict))
         continue
     newer = vnum(up_target) > vnum(version)
-    same_build = (str(up_target) == str(up_current)) if src == "ego" else False
+    same_build = (str(up_target) == str(up_current)) if src in ("ego", "github") else False
     if src == "gnome":
         # light-style ships with each GNOME release; our copy is regenerated from the tag for the new version.
         verdict = f"UPDATE: re-vendor tag {up_target} (regenerate metadata)"
@@ -125,7 +146,7 @@ for uuid, s in shipped.items():
         verdict = f"ADD {target} to shell-version after testing (upstream lists it for this build)"
         blockers += 1
     rows.append((uuid, version, str(up_target), "yes" if declares_target else "NO",
-                 ("same build" if same_build else f"differs from {current} build ({up_current})") if src == "ego" else "-", verdict))
+                 ("same build" if same_build else f"differs from {current} build ({up_current})") if src in ("ego", "github") else "-", verdict))
 
 w = [max(len(str(r[i])) for r in rows + [("extension", "shipped", "upstream " + target, "declares " + target, "vs GNOME " + current, "verdict")]) for i in range(6)]
 hdr = ("extension", "shipped", "upstream " + target, "declares " + target, "vs GNOME " + current, "verdict")
