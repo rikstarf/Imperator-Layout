@@ -6,7 +6,7 @@
 %global extdir %{_datadir}/gnome-shell/extensions
 
 Name:           imperator-layouts
-Version:        1.3.3
+Version:        1.4.0
 Release:        1%{?dist}
 Summary:        Imperator desktop layouts (macOS-like, Windows 11-like, ChromeOS-like) for GNOME
 License:        GPL-2.0-or-later AND GPL-2.0-only AND GPL-3.0-or-later
@@ -17,6 +17,7 @@ BuildArch:      noarch
 BuildRequires:  glib2-devel
 BuildRequires:  gettext
 Requires:       gnome-shell >= 51
+Requires:       gnome-shell < 52
 Requires:       dconf
 Requires:       glib2
 Requires:       gjs
@@ -63,6 +64,8 @@ cp -a locale-staged/. %{buildroot}%{_datadir}/locale/
 install -Dpm 0644 packaging/imperator-layouts.desktop %{buildroot}%{_datadir}/applications/imperator-layouts.desktop
 install -Dpm 0644 packaging/imperator-layouts-firstrun.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/imperator-layouts-firstrun.desktop
 install -Dpm 0644 packaging/default-layout %{buildroot}%{_sysconfdir}/imperator-layouts/default-layout
+install -Dpm 0644 packaging/imperator.repo %{buildroot}%{_sysconfdir}/yum.repos.d/imperator.repo
+install -Dpm 0644 packaging/RPM-GPG-KEY-imperator %{buildroot}%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-imperator
 
 %files -f extensions.list
 %license LICENSE vendor/NOTICE.md vendor/COPYING
@@ -75,8 +78,15 @@ install -Dpm 0644 packaging/default-layout %{buildroot}%{_sysconfdir}/imperator-
 %{_sysconfdir}/xdg/autostart/imperator-layouts-firstrun.desktop
 %dir %{_sysconfdir}/imperator-layouts
 %config(noreplace) %{_sysconfdir}/imperator-layouts/default-layout
+%config(noreplace) %{_sysconfdir}/yum.repos.d/imperator.repo
+%{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-imperator
 
 %changelog
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.4.0-1
+- Updates from a signed RPM repo: ships imperator.repo and the release public key, so rpm-ostree upgrade / dnf upgrade pick up new releases
+- Requires gnome-shell >= 51 and < 52: refuses an untested GNOME major until a vetted release is published
+- Works on Silverblue (rpm-ostree) and regular Fedora Workstation (dnf)
+
 * Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.3.3-1
 - macOS layout: light top bar tinted like the dock (light mode, glass off) so bar and dock match at every preset
 

@@ -1,8 +1,9 @@
 # Packaging and deployment (RPM)
 
-The layouts ship as one self-contained noarch RPM, `imperator-layouts`, meant to be installed from a local file (the USB
-stick that carries the deployer) on Fedora Silverblue. No repository, signing infrastructure or network is needed at the
-client site: every extension, including AppIndicator and Light Style, is bundled in the RPM.
+The layouts ship as one self-contained noarch RPM, `imperator-layouts`, for Fedora Silverblue (`rpm-ostree`) and regular Fedora
+Workstation (`dnf`). The first install can come from a local file (the deployer USB) with no network: every extension, including
+AppIndicator and Light Style, is bundled. The RPM also installs `imperator.repo` and the release public key, so afterwards
+`rpm-ostree upgrade` / `dnf upgrade` fetch new signed releases from the Imperator repo (GitHub Pages).
 
 ## What the RPM installs
 
@@ -11,6 +12,7 @@ client site: every extension, including AppIndicator and Light Style, is bundled
 | `/usr/share/gnome-shell/extensions/<uuid>/` | all extensions (vendored upstream + ours), overrides applied, schemas compiled |
 | `/usr/share/imperator-layouts/` | `imperator-layout`, `imperator-layout-ui`, `layouts/*.dconf` |
 | `/usr/bin/imperator-layout`, `/usr/bin/imperator-layout-ui` | symlinks into the line above |
+| `/etc/yum.repos.d/imperator.repo`, `/etc/pki/rpm-gpg/RPM-GPG-KEY-imperator` | the update repo (gpgcheck and repo_gpgcheck on) and its signing key |
 | `/usr/share/applications/imperator-layouts.desktop` | "Desktop Layout" launcher for the picker (English and Spanish names) |
 | `/usr/share/locale/es/LC_MESSAGES/imperator-layouts.mo` | Spanish translation of the picker (English is the source text) |
 | `<extension>/locale/es/...` (inside each extension dir) | Spanish menus for Logo Menu, Dash to Dock, Dash to Panel and AppMenu (ArcMenu ships its own) |
@@ -70,6 +72,25 @@ Removing the package does not touch per-user state: each user keeps their dconf 
 (it will then name extensions that no longer exist, which GNOME ignores) and `~/.config/imperator-layouts/current`.
 To reset a user to stock GNOME: delete that file and run `dconf reset -f /org/gnome/shell/extensions/` and
 `gsettings reset org.gnome.shell enabled-extensions`.
+
+## Regular Fedora Workstation
+
+`sudo dnf install ./imperator-layouts-<version>.noarch.rpm`, no reboot needed; log out and in. Updates: `sudo dnf upgrade`.
+The package requires `gnome-shell >= 51` and `< 52`, so it will not install on an untested GNOME major.
+
+## Publishing a release (maintainer)
+
+Done on the maintainer's machine, which holds the private signing key (never in the repo):
+
+1. Bump `Version:` and add the `%changelog` entry in the spec, commit and push.
+2. `tools/publish-repo.sh`: builds the RPM, signs it (`rpmsign`), checks the signature, adds it to the `gh-pages` branch
+   (`repo/`, the newest three RPMs), regenerates and signs the metadata (`createrepo_c`, detached `repomd.xml.asc`), pushes, and
+   creates the GitHub release `v<version>` with the RPM attached (needs `gh auth login`).
+3. GitHub Pages must serve `gh-pages` (repo Settings, Pages, deploy from branch, root). The repo URL is
+   `https://rikstarf.github.io/Imperator-Layout/repo/`.
+4. `usb-sync.sh` in the deployer repo downloads the latest release RPM, verifies it against the pinned key and puts it in the USB root.
+
+To support a new GNOME major, vet it first (see DESIGN.md, Update gate), then raise the `gnome-shell <` cap in the spec and publish.
 
 ## Development install (no RPM)
 
