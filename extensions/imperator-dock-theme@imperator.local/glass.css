@@ -57,3 +57,65 @@
 #panel .panel-button#panelActivities .workspace-dot {
   background-color: #ffffff;
 }
+
+/*
+ * Shell menus and popovers (Apple menu, app menus, calendar and notifications, switchers): clear glass, white text, in both color
+ * schemes. Blur My Shell's own popup backgrounds are switched off (override-background=false in glass.dconf) because it paints a
+ * solid fill on popups it does not blur, so this sheet owns the look. Selectors repeat the class to outrank light.css.
+ */
+.popup-menu-content.popup-menu-content,
+.candidate-popup-content.candidate-popup-content,
+.switcher-list.switcher-list,
+.workspace-switcher.workspace-switcher,
+.osd-window.osd-window {
+  background-color: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.30);
+  color: #ffffff;
+}
+.popup-sub-menu.popup-sub-menu {
+  background-color: rgba(255, 255, 255, 0.06);
+  box-shadow: none;
+  border: none;
+  color: #ffffff;
+}
+.popup-menu-content.popup-menu-content StLabel,
+.popup-menu-content.popup-menu-content StIcon,
+.popup-menu-content.popup-menu-content .popup-menu-item,
+.popup-sub-menu.popup-sub-menu .popup-menu-item,
+.candidate-popup-content.candidate-popup-content StLabel,
+.switcher-list.switcher-list StLabel,
+.osd-window.osd-window StLabel,
+.osd-window.osd-window StIcon {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}
+.popup-menu-content.popup-menu-content .popup-menu-item:hover,
+.popup-menu-content.popup-menu-content .popup-menu-item:focus,
+.popup-menu-content.popup-menu-content .popup-menu-item:selected,
+.popup-menu-content.popup-menu-content .popup-menu-item:active,
+.popup-sub-menu.popup-sub-menu .popup-menu-item:hover,
+.popup-sub-menu.popup-sub-menu .popup-menu-item:focus,
+.popup-sub-menu.popup-sub-menu .popup-menu-item:active {
+  background-color: rgba(255, 255, 255, 0.20);
+  color: #ffffff;
+}
+.popup-menu-content.popup-menu-content .popup-separator-menu-item .popup-separator-menu-item-separator {
+  background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Calendar and notifications popover: the same clear tiles. */
+.datemenu-popover .message-list .message,
+.datemenu-popover .calendar,
+.datemenu-popover .events-button,
+.datemenu-popover .world-clocks-button,
+.datemenu-popover .weather-button {
+  background-color: rgba(255, 255, 255, 0.10);
+}
+.datemenu-popover StLabel,
+.datemenu-popover StIcon {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+  icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.55);
+}

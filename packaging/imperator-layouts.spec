@@ -6,7 +6,7 @@
 %global extdir %{_datadir}/gnome-shell/extensions
 
 Name:           imperator-layouts
-Version:        1.5.1
+Version:        1.5.2
 Release:        1
 Summary:        Imperator desktop layouts (macOS-like, Windows 11-like, ChromeOS-like) for GNOME
 License:        GPL-2.0-or-later AND GPL-2.0-only AND GPL-3.0-or-later
@@ -90,6 +90,12 @@ install -Dpm 0644 packaging/RPM-GPG-KEY-imperator %{buildroot}%{_sysconfdir}/pki
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-imperator
 
 %changelog
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.5.2-1
+- Glass: menus, the Apple menu, switchers and the calendar and notifications popover are clear glass with white text in both color schemes
+- Glass: the control panel is clear again in light mode (Blur My Shell no longer paints its solid theme fill on it)
+- Glass: slightly lighter white veil in light mode so white text stays readable
+- `glass on|off` waits for Files to exit before returning
+
 * Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.5.1-1
 - Glass re-tuned toward the macOS Tahoe look: much wider blur (radius 150 for dock, top bar, popups and overview, 200 for windows) with boosted saturation so the wallpaper's colors smear through, and a lighter white veil in light mode
 - Dock and popups use Blur My Shell's transparent style so the pipeline alone tints them (no extra 65% white fill)
