@@ -1,0 +1,53 @@
+/*
+ * Imperator glass look. Loaded on top of light.css only while the glass switch is on. The blur itself is Blur My Shell's;
+ * this adds what it does not: a legible see-through top bar and a light rim on the dock.
+ */
+
+/* Top bar: no background at all (set by extension.js). White text and icons, as in macOS (Light Style would make them dark),
+   with a soft shadow to stay readable on any wallpaper. */
+#panel .panel-button,
+#panel .panel-button .clock,
+#panel .panel-button StLabel,
+#panel .panel-button .panel-status-menu-box,
+#panel .panel-button .system-status-icon {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+/* Dock: nearly clear tint over the blur, with a thin light edge and a highlight along the top. */
+#dashtodockContainer #dash .dash-background {
+  background-color: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+/*
+ * Control panel (quick settings): the dock's properties without the blur: a near-clear tint, a thin light rim and a top highlight.
+ * Text and icons go white with a soft shadow like the top bar, since there is no blurred backdrop to give dark text contrast.
+ * The selector repeats the class to outrank Blur My Shell's `.bms-popup-background-* .quick-settings` rules.
+ */
+.quick-settings.quick-settings.quick-settings {
+  background-color: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+.quick-settings.quick-settings.quick-settings StLabel,
+.quick-settings.quick-settings.quick-settings StIcon {
+  color: #ffffff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+  icon-shadow: 0 1px 3px rgba(0, 0, 0, 0.6);
+}
+/* Toggle tiles, sliders' tracks and the round header buttons: the same clear white fill; switched-on tiles keep the accent color. */
+.quick-settings.quick-settings .quick-toggle,
+.quick-settings.quick-settings .quick-menu-toggle,
+.quick-settings.quick-settings .icon-button,
+.quick-settings.quick-settings .button {
+  background-color: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+}
+.quick-settings.quick-settings .quick-toggle:checked,
+.quick-settings.quick-settings .quick-menu-toggle:checked,
+.quick-settings.quick-settings .quick-toggle:checked .quick-toggle {
+  background-color: -st-accent-color;
+}

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Imperator layout first run
+Comment=Applies the site default desktop layout once per user
+Exec=/usr/bin/imperator-layout firstrun
+Terminal=false
+NoDisplay=true
+OnlyShowIn=GNOME;

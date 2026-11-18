@@ -1,0 +1,4 @@
+# macOS layout: the top bar is a plain see-through strip (no blur, no background), as in macOS. Blur My Shell leaves it alone.
+[org/gnome/shell/extensions/blur-my-shell/panel]
+blur=false
+override-background=false

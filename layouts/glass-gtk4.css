@@ -1,0 +1,27 @@
+/* Imperator glass: window backgrounds only. Colors for text, icons and controls are untouched; only the big background
+   surfaces get an alpha, so the blur behind the window (Blur My Shell) shows through them. libadwaita named colors. */
+@define-color window_bg_color rgba(255, 255, 255, 0.45);
+@define-color view_bg_color rgba(255, 255, 255, 0.30);
+@define-color headerbar_bg_color rgba(255, 255, 255, 0.35);
+@define-color headerbar_backdrop_color rgba(255, 255, 255, 0.35);
+@define-color sidebar_bg_color rgba(255, 255, 255, 0.35);
+@define-color sidebar_backdrop_color rgba(255, 255, 255, 0.35);
+@define-color secondary_sidebar_bg_color rgba(255, 255, 255, 0.30);
+@define-color secondary_sidebar_backdrop_color rgba(255, 255, 255, 0.30);
+@define-color card_bg_color rgba(255, 255, 255, 0.50);
+@define-color dialog_bg_color rgba(255, 255, 255, 0.60);
+@define-color popover_bg_color rgba(255, 255, 255, 0.85);
+
+@media (prefers-color-scheme: dark) {
+  @define-color window_bg_color rgba(36, 36, 36, 0.45);
+  @define-color view_bg_color rgba(30, 30, 30, 0.30);
+  @define-color headerbar_bg_color rgba(48, 48, 48, 0.35);
+  @define-color headerbar_backdrop_color rgba(48, 48, 48, 0.35);
+  @define-color sidebar_bg_color rgba(48, 48, 48, 0.35);
+  @define-color sidebar_backdrop_color rgba(48, 48, 48, 0.35);
+  @define-color secondary_sidebar_bg_color rgba(40, 40, 40, 0.30);
+  @define-color secondary_sidebar_backdrop_color rgba(40, 40, 40, 0.30);
+  @define-color card_bg_color rgba(255, 255, 255, 0.08);
+  @define-color dialog_bg_color rgba(48, 48, 48, 0.60);
+  @define-color popover_bg_color rgba(54, 54, 54, 0.85);
+}

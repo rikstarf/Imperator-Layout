@@ -1,0 +1,460 @@
+# Spanish translation of AppMenu, written for Imperator (AppMenu upstream ships no Spanish catalog).
+# GPL-3.0-or-later, same as AppMenu.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: AppMenu\n"
+"PO-Revision-Date: 2026-11-18 05:00+0000\n"
+"Last-Translator: Imperator Solutions\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "(untitled)"
+msgstr "(sin título)"
+
+msgid "..."
+msgstr "..."
+
+msgid "About %s"
+msgstr "Acerca de %s"
+
+msgid "About AppMenu"
+msgstr "Acerca de AppMenu"
+
+msgid "About This System"
+msgstr "Acerca de este sistema"
+
+msgid "App Details"
+msgstr "Detalles de la aplicación"
+
+msgid "AppMenu"
+msgstr "AppMenu"
+
+msgid "AppMenu Settings"
+msgstr "Ajustes de AppMenu"
+
+msgid "AppMenu Status"
+msgstr "Estado de AppMenu"
+
+msgid "Appearance"
+msgstr "Apariencia"
+
+msgid "Application unavailable"
+msgstr "Aplicación no disponible"
+
+msgid "Applications"
+msgstr "Aplicaciones"
+
+msgid "As Icons"
+msgstr "Como iconos"
+
+msgid "As List"
+msgstr "Como lista"
+
+msgid "Back"
+msgstr "Atrás"
+
+msgid "Bring All to Front"
+msgstr "Traer todo al frente"
+
+msgid "Choose an icon from the visual gallery below."
+msgstr "Elige un icono de la galería de abajo."
+
+msgid "Choose the panel icon and how AppMenu appears in the top bar."
+msgstr "Elige el icono del panel y cómo aparece AppMenu en la barra superior."
+
+msgid "Choose which side of the panel shows workspace navigation."
+msgstr "Elige en qué lado del panel se muestra la navegación entre espacios de trabajo."
+
+msgid "Clear Menu"
+msgstr "Vaciar menú"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Close Window"
+msgstr "Cerrar ventana"
+
+msgid "Computer"
+msgstr "Equipo"
+
+msgid "Configure optional panel items such as user switching and workspace navigation."
+msgstr "Configura elementos opcionales del panel, como el cambio de usuario y la navegación entre espacios de trabajo."
+
+msgid "Control when menus update and whether AppMenu should use real exported app menus."
+msgstr "Controla cuándo se actualizan los menús y si AppMenu debe usar los menús reales que exportan las aplicaciones."
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Copy Troubleshooting Info"
+msgstr "Copiar información de diagnóstico"
+
+msgid "Could not copy troubleshooting info. Enable debug logging and check the journal."
+msgstr "No se pudo copiar la información de diagnóstico. Activa el registro de depuración y revisa el diario."
+
+msgid "Current Status"
+msgstr "Estado actual"
+
+msgid "Custom"
+msgstr "Personalizado"
+
+msgid "Cut"
+msgstr "Cortar"
+
+msgid "Debug Logging"
+msgstr "Registro de depuración"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Desktop"
+msgstr "Escritorio"
+
+msgid "Diagnostics"
+msgstr "Diagnóstico"
+
+msgid "Disabled"
+msgstr "Desactivado"
+
+msgid "Documents"
+msgstr "Documentos"
+
+msgid "Downloads"
+msgstr "Descargas"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "Eject"
+msgstr "Expulsar"
+
+msgid "Emoji & Symbols"
+msgstr "Emojis y símbolos"
+
+msgid "Empty Trash..."
+msgstr "Vaciar la papelera..."
+
+msgid "Enable troubleshooting logs only when you need to collect debug information."
+msgstr "Activa los registros de diagnóstico solo cuando necesites recopilar información de depuración."
+
+msgid "Enabled"
+msgstr "Activado"
+
+msgid "Enter Full Screen"
+msgstr "Pantalla completa"
+
+msgid "Extension: Active"
+msgstr "Extensión: activa"
+
+msgid "Fallback menus"
+msgstr "Menús alternativos"
+
+msgid "File"
+msgstr "Archivo"
+
+msgid "Find"
+msgstr "Buscar"
+
+msgid "Focused app: %s"
+msgstr "Aplicación activa: %s"
+
+msgid "Force Quit..."
+msgstr "Forzar salida..."
+
+msgid "Force Quit…"
+msgstr "Forzar salida…"
+
+msgid "Forward"
+msgstr "Adelante"
+
+msgid "Get Info"
+msgstr "Obtener información"
+
+msgid "Go"
+msgstr "Ir"
+
+msgid "Help"
+msgstr "Ayuda"
+
+msgid "Hide %s"
+msgstr "Ocultar %s"
+
+msgid "Hide AppMenu"
+msgstr "Ocultar AppMenu"
+
+msgid "Hide Others"
+msgstr "Ocultar otras"
+
+msgid "Home"
+msgstr "Carpeta personal"
+
+msgid "Icon"
+msgstr "Icono"
+
+msgid "Icon Size"
+msgstr "Tamaño del icono"
+
+msgid "Item unavailable"
+msgstr "Elemento no disponible"
+
+msgid "Left side"
+msgstr "Lado izquierdo"
+
+msgid "Lock Screen"
+msgstr "Bloquear pantalla"
+
+msgid "Lock to focused app"
+msgstr "Fijar a la aplicación activa"
+
+msgid "Log Out..."
+msgstr "Cerrar sesión..."
+
+msgid "Login Window..."
+msgstr "Ventana de inicio de sesión..."
+
+msgid "Maximize"
+msgstr "Maximizar"
+
+msgid "Menu Behavior"
+msgstr "Comportamiento del menú"
+
+msgid "Menu source: %s"
+msgstr "Origen del menú: %s"
+
+msgid "Minimize"
+msgstr "Minimizar"
+
+msgid "More"
+msgstr "Más"
+
+msgid "Move Window Left"
+msgstr "Mover ventana a la izquierda"
+
+msgid "Move Window Right"
+msgstr "Mover ventana a la derecha"
+
+msgid "Move to Trash"
+msgstr "Mover a la papelera"
+
+msgid "Network"
+msgstr "Red"
+
+msgid "New Folder"
+msgstr "Carpeta nueva"
+
+msgid "New Tab"
+msgstr "Pestaña nueva"
+
+msgid "New Window"
+msgstr "Ventana nueva"
+
+msgid "Next Workspace"
+msgstr "Espacio de trabajo siguiente"
+
+msgid "No eligible user accounts found"
+msgstr "No se encontraron cuentas de usuario elegibles"
+
+msgid "No items configured"
+msgstr "No hay elementos configurados"
+
+msgid "No recent items"
+msgstr "No hay elementos recientes"
+
+msgid "No results found"
+msgstr "No se encontraron resultados"
+
+msgid "Only update menu when switching windows."
+msgstr "Actualizar el menú solo al cambiar de ventana."
+
+msgid "Open"
+msgstr "Abrir"
+
+msgid "Open AppMenu Preferences"
+msgstr "Abrir preferencias de AppMenu"
+
+msgid "Open GNOME Settings"
+msgstr "Abrir Configuración de GNOME"
+
+msgid "Open Home"
+msgstr "Abrir carpeta personal"
+
+msgid "Open Windows"
+msgstr "Ventanas abiertas"
+
+msgid "Open With"
+msgstr "Abrir con"
+
+msgid "Panel Extras"
+msgstr "Extras del panel"
+
+msgid "Panel icon size in pixels (12–36)."
+msgstr "Tamaño del icono del panel en píxeles (12–36)."
+
+msgid "Paste"
+msgstr "Pegar"
+
+msgid "Previous Workspace"
+msgstr "Espacio de trabajo anterior"
+
+msgid "Print"
+msgstr "Imprimir"
+
+msgid "Quit %s"
+msgstr "Salir de %s"
+
+msgid "Read exported D-Bus menus when apps provide them. Apps without exported menus keep the safe fallback menus."
+msgstr "Lee los menús que exportan las aplicaciones por D-Bus. Las aplicaciones sin menús exportados mantienen los menús alternativos seguros."
+
+msgid "Real exported menus"
+msgstr "Menús reales exportados"
+
+msgid "Real menus: %s"
+msgstr "Menús reales: %s"
+
+msgid "Recent Files"
+msgstr "Archivos recientes"
+
+msgid "Recent Items"
+msgstr "Elementos recientes"
+
+msgid "Recents"
+msgstr "Recientes"
+
+msgid "Redo"
+msgstr "Rehacer"
+
+msgid "Rename"
+msgstr "Renombrar"
+
+msgid "Reset"
+msgstr "Restablecer"
+
+msgid "Reset AppMenu Settings"
+msgstr "Restablecer ajustes de AppMenu"
+
+msgid "Restart"
+msgstr "Reiniciar"
+
+msgid "Restore AppMenu preferences to their packaged defaults."
+msgstr "Restaura las preferencias de AppMenu a sus valores predeterminados."
+
+msgid "Reverse Sort Order"
+msgstr "Invertir el orden"
+
+msgid "Right side"
+msgstr "Lado derecho"
+
+msgid "Search apps, recent files, and settings"
+msgstr "Buscar aplicaciones, archivos recientes y ajustes"
+
+msgid "Search icons"
+msgstr "Buscar iconos"
+
+msgid "Search..."
+msgstr "Buscar..."
+
+msgid "Select All"
+msgstr "Seleccionar todo"
+
+msgid "Send Feedback"
+msgstr "Enviar comentarios"
+
+msgid "Settings"
+msgstr "Configuración"
+
+msgid "Show All"
+msgstr "Mostrar todo"
+
+msgid "Show Hidden Files"
+msgstr "Mostrar archivos ocultos"
+
+msgid "Show OS icon"
+msgstr "Mostrar el icono del sistema"
+
+msgid "Show User Switcher"
+msgstr "Mostrar el selector de usuario"
+
+msgid "Show Workspace Indicator"
+msgstr "Mostrar el indicador de espacios de trabajo"
+
+msgid "Show the logo icon in the top panel."
+msgstr "Muestra el icono del logotipo en el panel superior."
+
+msgid "Show user switcher in the right side of the panel."
+msgstr "Muestra el selector de usuario en el lado derecho del panel."
+
+msgid "Show workspace navigation dots in the top panel."
+msgstr "Muestra los puntos de navegación entre espacios de trabajo en el panel superior."
+
+msgid "Shut Down"
+msgstr "Apagar"
+
+msgid "Sleep"
+msgstr "Suspender"
+
+msgid "Software"
+msgstr "Software"
+
+msgid "Sort by Date"
+msgstr "Ordenar por fecha"
+
+msgid "Sort by Kind"
+msgstr "Ordenar por tipo"
+
+msgid "Sort by Name"
+msgstr "Ordenar por nombre"
+
+msgid "Sort by Size"
+msgstr "Ordenar por tamaño"
+
+msgid "Start typing to search apps, settings, and recent files."
+msgstr "Empieza a escribir para buscar aplicaciones, ajustes y archivos recientes."
+
+msgid "System Settings"
+msgstr "Configuración del sistema"
+
+msgid "Tile Left"
+msgstr "Ajustar a la izquierda"
+
+msgid "Tile Right"
+msgstr "Ajustar a la derecha"
+
+msgid "Toggle Path Bar"
+msgstr "Mostrar u ocultar la barra de ruta"
+
+msgid "Troubleshooting info copied to clipboard."
+msgstr "Información de diagnóstico copiada al portapapeles."
+
+msgid "Try a different app, setting, or recent file name."
+msgstr "Prueba con otra aplicación, ajuste o nombre de archivo reciente."
+
+msgid "Undo"
+msgstr "Deshacer"
+
+msgid "Untitled"
+msgstr "Sin título"
+
+msgid "Use real application menus"
+msgstr "Usar los menús reales de las aplicaciones"
+
+msgid "Users & Groups Preferences..."
+msgstr "Preferencias de usuarios y grupos..."
+
+msgid "Utilities"
+msgstr "Utilidades"
+
+msgid "View"
+msgstr "Ver"
+
+msgid "Window"
+msgstr "Ventana"
+
+msgid "Workspace Indicator Position"
+msgstr "Posición del indicador de espacios de trabajo"
+
+msgid "Write diagnostic AppMenu logs to the GNOME Shell journal."
+msgstr "Escribe los registros de diagnóstico de AppMenu en el diario de GNOME Shell."

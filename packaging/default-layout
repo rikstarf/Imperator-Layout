@@ -1,0 +1,8 @@
+# Site default desktop layout, applied once at a user's first login (see imperator-layout firstrun).
+# Put exactly one of these on a line of its own, without a leading #:
+#   gnome      (vanilla GNOME, same as naming nothing)
+#   macos
+#   winlike
+#   chromeos
+# If no layout is named here, nothing is applied: the desktop stays vanilla GNOME and users pick a layout themselves
+# (Desktop Layout app or `imperator-layout`).

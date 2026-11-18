@@ -1,0 +1,109 @@
+# Spanish translation of the imperator-layouts picker.
+# This file is distributed under the same license as the imperator-layouts package (GPL-2.0-or-later).
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: imperator-layouts\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-18 06:10+0000\n"
+"PO-Revision-Date: 2026-11-18 04:30+0000\n"
+"Last-Translator: Imperator Solutions\n"
+"Language-Team: Spanish\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: imperator-layout-ui:33
+msgid "GNOME (default)"
+msgstr "GNOME (predeterminado)"
+
+#: imperator-layout-ui:34
+msgid "Windows 11 like"
+msgstr "Estilo Windows 11"
+
+#: imperator-layout-ui:35
+msgid "Mac OS like"
+msgstr "Estilo Mac OS"
+
+#: imperator-layout-ui:36
+msgid "Chrome OS like"
+msgstr "Estilo Chrome OS"
+
+#: imperator-layout-ui:40
+msgid "Solid"
+msgstr "Sólida"
+
+#: imperator-layout-ui:41
+msgid "Soft"
+msgstr "Suave"
+
+#: imperator-layout-ui:42
+msgid "Clear"
+msgstr "Transparente"
+
+#: imperator-layout-ui:68
+msgid "unknown error"
+msgstr "error desconocido"
+
+#: imperator-layout-ui:84
+msgid "Desktop Layout"
+msgstr "Diseño del escritorio"
+
+#: imperator-layout-ui:95
+msgid "Desktop layout"
+msgstr "Diseño del escritorio"
+
+#: imperator-layout-ui:96
+msgid "Choose how the desktop looks and behaves."
+msgstr "Elige cómo se ve y cómo funciona el escritorio."
+
+#: imperator-layout-ui:99
+msgid "Transparency"
+msgstr "Transparencia"
+
+#: imperator-layout-ui:100
+msgid "Applies to the dock or taskbar of the chosen layout."
+msgstr "Se aplica al dock o a la barra de tareas del diseño elegido."
+
+#: imperator-layout-ui:104
+msgid "Glass effect"
+msgstr "Efecto cristal"
+
+#: imperator-layout-ui:105
+msgid "Blur behind the dock, menus and overview, and a see-through top bar."
+msgstr ""
+"Desenfoque detrás del dock, los menús y la vista general, y una barra "
+"superior transparente."
+
+#: imperator-layout-ui:158
+#, javascript-format
+msgid "Could not run imperator-layout: %s"
+msgstr "No se pudo ejecutar imperator-layout: %s"
+
+#: imperator-layout-ui:186
+msgid "Layout applied"
+msgstr "Diseño aplicado"
+
+#: imperator-layout-ui:186
+#, javascript-format
+msgid "Could not apply layout: %s"
+msgstr "No se pudo aplicar el diseño: %s"
+
+#: imperator-layout-ui:188
+msgid "Transparency applied"
+msgstr "Transparencia aplicada"
+
+#: imperator-layout-ui:188
+#, javascript-format
+msgid "Could not apply transparency: %s"
+msgstr "No se pudo aplicar la transparencia: %s"
+
+#: imperator-layout-ui:192
+msgid "Glass changed. Files was closed to apply it; reopen other apps to see it."
+msgstr "Efecto cristal cambiado. Se cerró Archivos para aplicarlo; vuelve a abrir las demás aplicaciones para ver el cambio."
+
+#: imperator-layout-ui:192
+#, javascript-format
+msgid "Could not apply glass: %s"
+msgstr "No se pudo aplicar el efecto cristal: %s"

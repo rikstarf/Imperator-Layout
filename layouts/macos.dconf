@@ -1,0 +1,28 @@
+# Imperator layout: macos
+# Dock (Dash to Dock) + top panel; taskbar disabled, so positions reset.
+[org/gnome/desktop/wm/preferences]
+button-layout='close,minimize,maximize:appmenu'
+
+# Logo Menu (note the capital L: that is the schema's own path and dconf paths are case-sensitive).
+# Terminal: its default, gnome-terminal, is not installed on Silverblue. Power and lock items are off by default.
+# Icon 16 = voyager-logo-symbolic, the choice made on the reference VM.
+[org/gnome/shell/extensions/Logo-menu]
+menu-button-icon-image=16
+menu-button-terminal='ptyxis'
+show-lockscreen=true
+show-power-options=true
+
+# AppMenu: global menu bar. Logo Menu stays the Apple menu, so AppMenu's own Apple/OS button is hidden.
+# User switcher off (GNOME's system menu already covers it). Search shortcut off: it grabs Ctrl+Space globally
+# (breaks completion in terminals and editors); Super already opens GNOME's search.
+[org/gnome/shell/extensions/appmenu]
+show-os-icon=false
+show-user-switcher=false
+search-shortcut=@as []
+
+[org/gnome/shell/extensions/dash-to-panel]
+panel-element-positions='{}'
+
+# Top bar tinted with the dock's light color (light mode, glass off), so bar and dock match at every transparency preset.
+[org/gnome/shell/extensions/imperator-dock-theme]
+light-panel=true

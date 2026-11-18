@@ -1,0 +1,11 @@
+{
+  "name": "Light Style",
+  "description": "Switch default to light style",
+  "uuid": "light-style@gnome-shell-extensions.gcampax.github.com",
+  "gettext-domain": "gnome-shell-extensions",
+  "shell-version": [
+    "51"
+  ],
+  "version-name": "51.0",
+  "url": "https://gitlab.gnome.org/GNOME/gnome-shell-extensions"
+}

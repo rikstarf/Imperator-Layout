@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="imperator-dock-theme">
+  <schema id="org.gnome.shell.extensions.imperator-dock-theme" path="/org/gnome/shell/extensions/imperator-dock-theme/">
+    <key name="panel-opacity" type="d">
+      <default>-1.0</default>
+      <range min="-1.0" max="1.0"/>
+      <summary>Top panel opacity</summary>
+      <description>Opacity of the stock top panel, 0.0 to 1.0. Only the alpha is set; the color is always the theme's. Negative (default) leaves the panel untouched. 1.0 is also left untouched.</description>
+    </key>
+    <key name="light-panel" type="b">
+      <default>false</default>
+      <summary>Light top panel</summary>
+      <description>Tints the stock top panel with the same light color as the dock (dark text and icons) while the shell is in light mode and glass is off. Opacity comes from panel-opacity (1.0 when unset). Set by the macOS layout.</description>
+    </key>
+    <key name="glass" type="b">
+      <default>false</default>
+      <summary>Glass look</summary>
+      <description>Makes the stock top panel fully see-through (text shadow for legibility) and adds a light rim to the dock. Set by imperator-layout glass on|off; the blur itself comes from Blur My Shell.</description>
+    </key>
+  </schema>
+</schemalist>

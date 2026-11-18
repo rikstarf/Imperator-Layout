@@ -1,0 +1,15 @@
+{
+  "uuid": "imperator-dock-theme@imperator.local",
+  "name": "Imperator Dock Theme",
+  "description": "Makes the bottom dock follow the system light/dark setting, and applies the transparency preset to the stock top panel (opacity only; the color stays the theme's).",
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50",
+    "51"
+  ],
+  "settings-schema": "org.gnome.shell.extensions.imperator-dock-theme"
+}

@@ -1,0 +1,187 @@
+/*
+ * Imperator light variant for the parts stock GNOME keeps dark even in its light style:
+ * the overview, the app grid, search results, folders and the dock's icon tiles.
+ * Loaded only while the shell is in light mode. The top panel's background is not touched;
+ * only its text/hover tint while the overview is open, so it stays readable on the light overview.
+ * Palette: bg #f2f2f4, fg #222226 (the stock light foreground).
+ */
+
+/* ---- Dock ---- */
+#dashtodockContainer #dash .dash-background {
+  background-color: rgba(246, 246, 246, 0.85);
+  border-color: rgba(0, 0, 0, 0.12);
+}
+#dashtodockContainer #dash .app-well-app-running-dot,
+#dashtodockContainer #dash .app-grid-running-dot {
+  background-color: rgba(0, 0, 0, 0.7);
+}
+#dashtodockContainer #dash .dash-separator {
+  background-color: rgba(0, 0, 0, 0.15);
+}
+#dashtodockContainer #dash .dash-item-container .show-apps .overview-icon,
+#dashtodockContainer #dash .dash-item-container .overview-tile .overview-icon,
+#dashtodockContainer #dash .dash-item-container .grid-search-result .overview-icon {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+#dashtodockContainer #dash .dash-item-container .show-apps:focus .overview-icon,
+#dashtodockContainer #dash .dash-item-container .overview-tile:focus .overview-icon,
+#dashtodockContainer #dash .dash-item-container .grid-search-result:focus .overview-icon {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.08);
+}
+#dashtodockContainer #dash .dash-item-container .show-apps:hover .overview-icon,
+#dashtodockContainer #dash .dash-item-container .overview-tile:hover .overview-icon,
+#dashtodockContainer #dash .dash-item-container .grid-search-result:hover .overview-icon {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+#dashtodockContainer #dash .dash-item-container .show-apps:active .overview-icon,
+#dashtodockContainer #dash .dash-item-container .overview-tile:active .overview-icon,
+#dashtodockContainer #dash .dash-item-container .grid-search-result:active .overview-icon,
+#dashtodockContainer #dash .dash-item-container .show-apps:checked .overview-icon,
+#dashtodockContainer #dash .dash-item-container .overview-tile:checked .overview-icon,
+#dashtodockContainer #dash .dash-item-container .grid-search-result:checked .overview-icon {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.16);
+}
+
+/* ---- Overview + app grid ---- */
+#overviewGroup {
+  background-color: #f2f2f4;
+}
+.overview-tile, .grid-search-result {
+  color: #222226;
+}
+.overview-tile:focus, .grid-search-result:focus {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.overview-tile:hover, .grid-search-result:hover {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.07);
+}
+.overview-tile:active, .grid-search-result:active,
+.overview-tile:highlighted, .grid-search-result:highlighted,
+.overview-tile:selected, .grid-search-result:selected,
+.overview-tile:checked, .grid-search-result:checked {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.11);
+}
+.overview-tile:insensitive, .grid-search-result:insensitive {
+  color: rgba(34, 34, 38, 0.4);
+}
+.app-folder {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.07);
+}
+.app-folder:hover {
+  background-color: rgba(0, 0, 0, 0.11);
+}
+.app-folder-dialog {
+  color: #222226;
+  background-color: #e6e6e8;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.1);
+}
+.app-folder-dialog .overview-tile:hover, .app-folder-dialog .grid-search-result:hover {
+  background-color: rgba(0, 0, 0, 0.07);
+}
+.page-indicator .page-indicator-icon {
+  background-color: #222226;
+}
+
+/* ---- Search results ---- */
+.search-section-content {
+  color: #222226;
+  background-color: #e6e6e8;
+}
+.search-statustext {
+  color: rgba(34, 34, 38, 0.8);
+}
+.list-search-result, .search-provider-icon {
+  color: #222226;
+}
+.list-search-result:hover, .search-provider-icon:hover,
+.list-search-result:focus, .search-provider-icon:focus {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.07);
+}
+.list-search-result:active, .search-provider-icon:active,
+.list-search-result:selected, .search-provider-icon:selected {
+  color: #222226;
+  background-color: rgba(0, 0, 0, 0.11);
+}
+
+/* ---- Top bar text while the overview is open (background stays the theme's transparent) ---- */
+#panel:overview .panel-button,
+#panel:overview .panel-button.clock-display {
+  color: #222226;
+}
+#panel:overview .panel-button:focus, #panel:overview .panel-button:hover,
+#panel:overview .panel-button.clock-display:focus .clock, #panel:overview .panel-button.clock-display:hover .clock {
+  box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.08);
+}
+#panel:overview .panel-button:active, #panel:overview .panel-button:checked,
+#panel:overview .panel-button.clock-display:active .clock, #panel:overview .panel-button.clock-display:checked .clock {
+  box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.14);
+}
+#panel:overview .panel-button#panelActivities .workspace-dot {
+  background-color: #222226;
+}
+
+/* ---- Light top bar (macOS layout, light-panel on): dark text on the dock-colored bar, set up by extension.js ---- */
+#panel.imperator-light-panel .panel-button,
+#panel.imperator-light-panel .panel-button .clock,
+#panel.imperator-light-panel .panel-button StLabel,
+#panel.imperator-light-panel .panel-button StIcon {
+  color: #222226;
+}
+#panel.imperator-light-panel .panel-button:focus, #panel.imperator-light-panel .panel-button:hover,
+#panel.imperator-light-panel .panel-button.clock-display:focus .clock, #panel.imperator-light-panel .panel-button.clock-display:hover .clock {
+  box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.08);
+}
+#panel.imperator-light-panel .panel-button:active, #panel.imperator-light-panel .panel-button:checked,
+#panel.imperator-light-panel .panel-button.clock-display:active .clock, #panel.imperator-light-panel .panel-button.clock-display:checked .clock {
+  box-shadow: inset 0 0 0 100px rgba(0, 0, 0, 0.14);
+}
+#panel.imperator-light-panel .panel-button#panelActivities .workspace-dot {
+  background-color: #222226;
+}
+
+/* ---- Overview search box and folder name box (stock keeps these dark in the light style) ---- */
+.search-entry, .app-folder-dialog .folder-name-container .folder-name-entry {
+  background-color: #e0e0e1;
+  color: rgba(34, 34, 38, 0.7);
+}
+.search-entry:hover, .app-folder-dialog .folder-name-container .folder-name-entry:hover {
+  background-color: #d6d6d7;
+  color: #222226;
+}
+.search-entry:focus, .app-folder-dialog .folder-name-container .folder-name-entry:focus {
+  background-color: #e0e0e1;
+  color: #222226;
+}
+.search-entry:insensitive, .app-folder-dialog .folder-name-container .folder-name-entry:insensitive {
+  background-color: #e8e8e9;
+  color: rgba(34, 34, 38, 0.5);
+}
+.search-entry StLabel.hint-text, .app-folder-dialog .folder-name-container .folder-name-entry StLabel.hint-text {
+  color: rgba(34, 34, 38, 0.7);
+}
+
+/* Same search box rules with higher specificity (overview), in case the plain ones lose the cascade. */
+StEntry.search-entry, #overviewGroup StEntry.search-entry {
+  background-color: #e0e0e1;
+  color: rgba(34, 34, 38, 0.7);
+}
+StEntry.search-entry:hover, #overviewGroup StEntry.search-entry:hover {
+  background-color: #d6d6d7;
+  color: #222226;
+}
+StEntry.search-entry:focus, #overviewGroup StEntry.search-entry:focus {
+  background-color: #e0e0e1;
+  color: #222226;
+}
+StEntry.search-entry StLabel.hint-text, #overviewGroup StEntry.search-entry StLabel.hint-text {
+  color: rgba(34, 34, 38, 0.7);
+}

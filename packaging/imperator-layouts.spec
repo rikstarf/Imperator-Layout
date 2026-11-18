@@ -1,0 +1,121 @@
+# Imperator desktop layouts: GNOME extensions, layout profiles and the layout switcher, as one self-contained
+# noarch package (no network needed to install it; see PACKAGING.md). Build with tools/build-rpm.sh.
+%global debug_package %{nil}
+%global __brp_mangle_shebangs %{nil}
+%global _binary_payload w9.gzdio
+%global extdir %{_datadir}/gnome-shell/extensions
+
+Name:           imperator-layouts
+Version:        1.3.3
+Release:        1%{?dist}
+Summary:        Imperator desktop layouts (macOS-like, Windows 11-like, ChromeOS-like) for GNOME
+License:        GPL-2.0-or-later AND GPL-2.0-only AND GPL-3.0-or-later
+URL:            https://github.com/rikstarf/Imperator-Layout
+Source0:        %{name}-%{version}.tar.gz
+BuildArch:      noarch
+
+BuildRequires:  glib2-devel
+BuildRequires:  gettext
+Requires:       gnome-shell >= 51
+Requires:       dconf
+Requires:       glib2
+Requires:       gjs
+Requires:       libadwaita
+
+%description
+Vanilla GNOME plus three desktop layouts (and an optional glass effect) (macOS-like, Windows 11-like, ChromeOS-like) built from upstream GPL extensions (Dash to
+Dock, Dash to Panel, ArcMenu, Logo Menu, AppMenu, AppIndicator, Light Style) and two Imperator extensions, with the
+imperator-layout command and a small picker window (English and Spanish) to switch between them and to choose a
+transparency preset. Everything is bundled, so the package
+installs from a local file without network access. Extensions are installed system-wide; each user enables the layout
+they want (a site default can be applied at first login, see /etc/imperator-layouts/default-layout).
+
+%prep
+%setup -q
+
+%build
+tools/stage-extensions.sh staged
+tools/build-locale.sh locale-staged
+
+%install
+install -d %{buildroot}%{extdir}
+for d in staged/*/; do
+  uuid="$(basename "$d")"
+  cp -a "$d" "%{buildroot}%{extdir}/$uuid"
+  echo "%{extdir}/$uuid" >> extensions.list
+done
+find %{buildroot}%{extdir} -type d -exec chmod 0755 {} +
+find %{buildroot}%{extdir} -type f -exec chmod 0644 {} +
+
+install -d %{buildroot}%{_datadir}/imperator-layouts
+cp -a layouts %{buildroot}%{_datadir}/imperator-layouts/layouts
+find %{buildroot}%{_datadir}/imperator-layouts/layouts -type f -exec chmod 0644 {} +
+install -m 0755 imperator-layout %{buildroot}%{_datadir}/imperator-layouts/imperator-layout
+echo "%{version}" > %{buildroot}%{_datadir}/imperator-layouts/VERSION
+install -m 0755 imperator-layout-ui %{buildroot}%{_datadir}/imperator-layouts/imperator-layout-ui
+install -d %{buildroot}%{_bindir}
+ln -s ../share/imperator-layouts/imperator-layout %{buildroot}%{_bindir}/imperator-layout
+ln -s ../share/imperator-layouts/imperator-layout-ui %{buildroot}%{_bindir}/imperator-layout-ui
+
+install -d %{buildroot}%{_datadir}/locale
+cp -a locale-staged/. %{buildroot}%{_datadir}/locale/
+
+install -Dpm 0644 packaging/imperator-layouts.desktop %{buildroot}%{_datadir}/applications/imperator-layouts.desktop
+install -Dpm 0644 packaging/imperator-layouts-firstrun.desktop %{buildroot}%{_sysconfdir}/xdg/autostart/imperator-layouts-firstrun.desktop
+install -Dpm 0644 packaging/default-layout %{buildroot}%{_sysconfdir}/imperator-layouts/default-layout
+
+%files -f extensions.list
+%license LICENSE vendor/NOTICE.md vendor/COPYING
+%doc README.md DESIGN.md PACKAGING.md
+%{_bindir}/imperator-layout
+%{_bindir}/imperator-layout-ui
+%{_datadir}/imperator-layouts/
+%{_datadir}/applications/imperator-layouts.desktop
+%{_datadir}/locale/es/LC_MESSAGES/imperator-layouts.mo
+%{_sysconfdir}/xdg/autostart/imperator-layouts-firstrun.desktop
+%dir %{_sysconfdir}/imperator-layouts
+%config(noreplace) %{_sysconfdir}/imperator-layouts/default-layout
+
+%changelog
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.3.3-1
+- macOS layout: light top bar tinted like the dock (light mode, glass off) so bar and dock match at every preset
+
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.3.2-1
+- Toggling glass quits Files (it stays resident and never re-reads gtk.css)
+
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.3.1-1
+- Glass: windows use the static blur (blurred wallpaper under each window); the switch now says that open apps must be reopened
+  to change their window look.
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.3.0-1
+- Upgrades: at login, a user who already has a layout is re-applied once when the package moves to a new release (MAJOR.MINOR), so
+  new profile values reach them; their layout, glass switch and transparency preset are kept. Hotfix (patch) updates do nothing.
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.2.4-1
+- Glass: window backgrounds are translucent, text and icons are not. `glass on` writes a managed block into the user's gtk-4.0 and gtk-3.0
+  gtk.css (removed by `glass off` and by the vanilla layout); the window itself stays opaque (Blur My Shell opacity 255).
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.2.3-1
+- Glass: the control panel (quick settings) gets the dock's look without blur; windows made clearer.
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.2.2-1
+- ArcMenu no longer fails with "this.panel is undefined" when Dash to Panel is still building its panels (override of its extension.js).
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.2.1-1
+- Glass goes toward white (Blur My Shell light pipeline), top-bar text is white, every window is blurred.
+- "Theme default" transparency is gone; "solid" is the default for all three layouts. Glass owns the dock/taskbar opacity while on.
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.2.0-1
+- Glass effect: one switch (imperator-layout glass on|off, also in the picker) that enables Blur My Shell for the dock or taskbar,
+  popups and the overview, and makes the top bar see-through. Vendors Blur My Shell v78 (GPL-3.0-or-later).
+- The "glass" transparency preset is now called "clear".
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.1.0-1
+- New "GNOME (default)" layout: vanilla GNOME, none of our extensions, our settings reset. No site default now means vanilla.
+- Transparency presets for the dock, the taskbar and the stock top panel; opacity only, the color stays the theme's.
+- Language files are not tagged %lang, so they install whatever the system language or _install_langs is.
+- The picker is translated (English, Spanish); Spanish catalogs also restored for Logo Menu, Dash to Dock and Dash to Panel,
+  and a Spanish catalog written for AppMenu. AppMenu's Window-menu check now recognizes a translated Window menu.
+
+* Tue Nov 17 2026 Imperator Solutions <noreply@imperator.local> - 1.0.0-1
+- First RPM: replaces the tarball installer and layer-packages.sh. AppIndicator and Light Style are bundled.

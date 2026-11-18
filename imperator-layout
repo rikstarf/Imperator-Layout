@@ -1,0 +1,336 @@
+#!/usr/bin/env bash
+# imperator-layout — apply an Imperator desktop layout on GNOME (Fedora Silverblue).
+# Usage: imperator-layout gnome|macos|winlike|chromeos|opacity [solid|soft|clear]|glass [on|off]|status|check|current|firstrun
+set -euo pipefail
+
+HERE="$(cd "$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")" && pwd)"
+LAYOUTS="$HERE/layouts"
+STATE_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/imperator-layouts"
+OPACITY_STATE="$STATE_DIR/opacity"
+RELEASE_STATE="$STATE_DIR/release"
+GLASS_STATE="$STATE_DIR/glass"
+
+OLDMENU="zorin-menu@zorinos.com"   # replaced by Logo Menu; kept so apply strips stale entries
+LOGOMENU="logomenu@aryan_k"
+APPMENU="appmenu@ChathurangaBW.github.io"   # global menu bar (macOS layout only); its own Apple button is hidden, Logo Menu stays the Apple menu
+TASKBAR="dash-to-panel@jderose9.github.com"
+OLDTASKBAR="zorin-taskbar@zorinos.com"   # replaced by upstream Dash to Panel; kept so apply strips stale entries
+DASH="dash-to-dock@micxgx.gmail.com"
+OLDDASH="zorin-dash@zorinos.com"   # replaced by upstream Dash to Dock; kept so apply strips stale entries
+MOVECLOCK="imperator-panel-order@imperator.local"
+OLDMOVECLOCK="zorin-hide-activities-move-clock@zorinos.com"   # replaced by our own extension; kept so apply strips stale entries
+DOCKTHEME="imperator-dock-theme@imperator.local"
+BLUR="blur-my-shell@aunetx"   # backdrop blur; enabled only while the glass switch is on
+ARCMENU="arcmenu@arcmenu.com"
+APPINDICATOR="${IMPERATOR_APPINDICATOR_UUID:-appindicatorsupport@rgcjonas.gmail.com}"
+LIGHTSTYLE="${IMPERATOR_LIGHTSTYLE_UUID:-light-style@gnome-shell-extensions.gcampax.github.com}"
+
+# Extensions every layout needs, and the extras each layout adds.
+COMMON=("$APPINDICATOR" "$LIGHTSTYLE" "$DOCKTHEME")
+declare -A EXTRA=(
+  [gnome]=""   # vanilla GNOME: none of ours (also none of COMMON; see vanilla())
+  [macos]="$LOGOMENU $APPMENU $DASH $MOVECLOCK"
+  [winlike]="$ARCMENU $TASKBAR"
+  [chromeos]="$ARCMENU $TASKBAR"
+)
+# Everything this script owns: removed from the enabled list before the layout's set is added.
+MANAGED=("$OLDMENU" "$LOGOMENU" "$APPMENU" "$ARCMENU" "$TASKBAR" "$DASH" "$OLDDASH" "$OLDTASKBAR" "$OLDMOVECLOCK" "$MOVECLOCK" "$DOCKTHEME" "$BLUR")
+
+# The release is MAJOR.MINOR of the installed package (the RPM ships a VERSION file; a dev checkout has none). A patch number
+# (1.2.4 -> 1.2.5) is a hotfix and never re-applies anything for the user.
+release() {
+  sed -n '1s/^\([0-9][0-9]*\.[0-9][0-9]*\).*/\1/p' "$HERE/VERSION" 2>/dev/null || true
+}
+
+record_release() {
+  local rel
+  rel="$(release)"
+  [[ -n "$rel" ]] || return 0
+  mkdir -p "$STATE_DIR"
+  echo "$rel" > "$RELEASE_STATE"
+}
+
+die() { echo "imperator-layout: $*" >&2; exit 1; }
+
+for c in dconf gsettings gnome-extensions; do
+  command -v "$c" >/dev/null || die "missing command: $c"
+done
+
+status() {
+  echo "layout      : $(current)"
+  echo "transparency: $(opacity_current)"
+  echo "glass       : $(glass_current)"
+  echo "buttons     : $(gsettings get org.gnome.desktop.wm.preferences button-layout)"
+  echo "scheme      : $(gsettings get org.gnome.desktop.interface color-scheme)"
+  echo "enabled     : $(gsettings get org.gnome.shell enabled-extensions)"
+}
+
+current() {
+  cat "$STATE_DIR/current" 2>/dev/null || echo none
+}
+
+check() {
+  # Report the real state of every extension this script manages (ACTIVE = loaded and running).
+  local u state
+  for u in "${COMMON[@]}" "$LOGOMENU" "$APPMENU" "$ARCMENU" "$TASKBAR" "$DASH" "$MOVECLOCK"; do
+    state="$(gnome-extensions info "$u" 2>/dev/null | sed -n 's/^ *State: *//p' || true)"
+    printf '%-62s %s\n' "$u" "${state:-NOT INSTALLED}"
+  done
+}
+
+# Rewrite enabled-extensions: keep anything we do not manage, then add the given extensions.
+rewrite_enabled() {
+  local current cur_u new=() keep u joined
+  current="$(gsettings get org.gnome.shell enabled-extensions | sed -e 's/^@as //' | tr -d "[]',")"
+  for cur_u in $current; do
+    keep=1
+    for u in "${MANAGED[@]}" "${COMMON[@]}"; do
+      [[ "$cur_u" == "$u" ]] && keep=0 && break
+    done
+    (( keep )) && new+=("$cur_u")
+  done
+  new+=("$@")
+  if (( ${#new[@]} )); then
+    printf -v joined "'%s', " "${new[@]}"
+    gsettings set org.gnome.shell enabled-extensions "[${joined%, }]"
+  else
+    gsettings set org.gnome.shell enabled-extensions "@as []"
+  fi
+}
+
+# GNOME skips anything listed in disabled-extensions even when it is also enabled, so clear ours from it.
+clear_disabled() {
+  local dis kept=() d u drop joined
+  dis="$(gsettings get org.gnome.shell disabled-extensions | sed -e 's/^@as //' | tr -d "[]',")"
+  for d in $dis; do
+    drop=0
+    for u in "$@"; do
+      [[ "$d" == "$u" ]] && drop=1 && break
+    done
+    (( drop )) || kept+=("$d")
+  done
+  if (( ${#kept[@]} )); then
+    printf -v joined "'%s', " "${kept[@]}"
+    gsettings set org.gnome.shell disabled-extensions "[${joined%, }]"
+  else
+    gsettings set org.gnome.shell disabled-extensions "@as []"
+  fi
+}
+
+# Extensions to enable for a layout: the common set, the layout's own, and Blur My Shell while glass is on.
+layout_extensions() {
+  local extras
+  read -ra extras <<<"${EXTRA[$1]}"
+  ENABLED=("${COMMON[@]}" "${extras[@]}")
+  [[ "$(glass_current)" == on ]] && ENABLED+=("$BLUR")
+  return 0
+}
+
+# Glass: backdrop blur on the dock/taskbar, popups and overview, plus a see-through top bar. A switch, independent of the
+# transparency presets. layouts/glass.dconf is common; layouts/glass-<layout>.dconf holds per-layout differences.
+glass_current() {
+  cat "$GLASS_STATE" 2>/dev/null || echo off
+}
+
+load_glass_profiles() {
+  local f
+  gtk_glass on
+  for f in "$LAYOUTS/glass.dconf" "$LAYOUTS/glass-$1.dconf"; do
+    [[ -r "$f" ]] && dconf load / < "$f"
+  done
+  return 0
+}
+
+unload_glass_profiles() {
+  dconf reset -f /org/gnome/shell/extensions/blur-my-shell/
+  dconf reset /org/gnome/shell/extensions/imperator-dock-theme/glass
+  gtk_glass off
+}
+
+# Translucent window backgrounds: a marked block in the user's own gtk.css (GTK4/libadwaita and GTK3), replaced or removed as a unit,
+# the rest of the file left alone. Running apps pick it up on their next start.
+GTK_BEGIN="/* >>> imperator-glass (managed by imperator-layout; do not edit) >>> */"
+GTK_END="/* <<< imperator-glass <<< */"
+
+gtk_glass() {
+  local cfg="${XDG_CONFIG_HOME:-$HOME/.config}" ver file src tmp
+  for ver in 4 3; do
+    file="$cfg/gtk-$ver.0/gtk.css"
+    src="$LAYOUTS/glass-gtk$ver.css"
+    tmp="$(mktemp)"
+    if [[ -f "$file" ]]; then
+      awk -v b="$GTK_BEGIN" -v e="$GTK_END" '$0==b{skip=1} !skip{print} $0==e{skip=0}' "$file" > "$tmp"
+    fi
+    if [[ "$1" == on && -r "$src" ]]; then
+      { cat "$tmp"; echo "$GTK_BEGIN"; cat "$src"; echo "$GTK_END"; } > "$tmp.new"
+      mkdir -p "$(dirname "$file")"
+      mv "$tmp.new" "$file"
+    elif [[ -f "$file" ]]; then
+      if [[ -s "$tmp" ]]; then mv "$tmp" "$file"; else rm -f "$file"; fi
+    fi
+    rm -f "$tmp" "$tmp.new"
+  done
+  return 0
+}
+
+# Files keeps running after its windows close, so it never re-reads gtk.css.
+# Quit it (only if running) so the next window picks up the new glass look.
+restart_files() {
+  command -v nautilus >/dev/null 2>&1 || return 0
+  pgrep -u "$(id -u)" -x nautilus >/dev/null 2>&1 || return 0
+  nautilus -q >/dev/null 2>&1 || true
+  echo "Files was closed so it can reopen with the new look."
+}
+
+glass() {
+  [[ $# -eq 0 ]] && { glass_current; return 0; }
+  local state="$1" layout
+  [[ "$state" == on || "$state" == off ]] || die "usage: imperator-layout glass [on|off]"
+  layout="$(current)"
+  mkdir -p "$STATE_DIR"
+  echo "$state" > "$GLASS_STATE"
+  if [[ "$layout" == none || "$layout" == gnome ]]; then
+    echo "Glass: $state (takes effect once a layout is applied; vanilla GNOME has none of our extensions)"
+    return 0
+  fi
+  if [[ "$state" == on ]]; then
+    load_glass_profiles "$layout"
+  else
+    unload_glass_profiles
+    apply_opacity "$(opacity_current)"   # glass had overridden the dock/taskbar opacity
+  fi
+  layout_extensions "$layout"
+  rewrite_enabled "${ENABLED[@]}"
+  clear_disabled "${ENABLED[@]}"
+  echo "Glass: $state"
+  restart_files
+  echo "Apps that are already open keep their old window look until you close and reopen them."
+  [[ "$state" == on ]] && echo "If the blur does not appear, log out and back in (Wayland cannot reload the shell)."
+  return 0
+}
+
+# Transparency presets: solid (the default), soft, clear. Opacity only, never a color: the color always comes from the theme.
+opacity_current() {
+  cat "$OPACITY_STATE" 2>/dev/null || echo solid
+}
+
+apply_opacity() {
+  case "$1" in
+    solid|soft|clear)
+      [[ -r "$LAYOUTS/opacity-$1.dconf" ]] || die "missing preset: $LAYOUTS/opacity-$1.dconf"
+      dconf load / < "$LAYOUTS/opacity-$1.dconf" ;;
+    *) die "unknown transparency preset '$1' (solid|soft|clear)" ;;
+  esac
+}
+
+opacity() {
+  [[ $# -eq 0 ]] && { opacity_current; return 0; }
+  case "$1" in solid|soft|clear) ;; *) die "unknown transparency preset '$1' (solid|soft|clear)" ;; esac
+  mkdir -p "$STATE_DIR"
+  echo "$1" > "$OPACITY_STATE"
+  if [[ "$(current)" == none || "$(current)" == gnome ]]; then
+    echo "Transparency: $1 (takes effect once a layout is applied; vanilla GNOME has none of our extensions)"
+    return 0
+  fi
+  apply_opacity "$1"
+  # While glass is on it owns the dock/taskbar/top bar transparency: put it back on top of the preset.
+  if [[ "$(glass_current)" == on && "$(current)" != none && "$(current)" != gnome ]]; then
+    load_glass_profiles "$(current)"
+  fi
+  echo "Transparency: $1"
+}
+
+# Vanilla GNOME: none of our extensions, our settings reset to stock. The user's own extensions, color scheme and
+# every other setting stay as they are.
+vanilla() {
+  local p
+  for p in dash-to-dock dash-to-panel arcmenu Logo-menu appmenu imperator-dock-theme blur-my-shell; do
+    dconf reset -f "/org/gnome/shell/extensions/$p/"
+  done
+  dconf reset /org/gnome/desktop/wm/preferences/button-layout
+  dconf reset /org/gnome/desktop/interface/enable-hot-corners
+  gtk_glass off
+  rewrite_enabled
+  mkdir -p "$STATE_DIR"
+  echo gnome > "$STATE_DIR/current"
+  record_release
+  echo "Applied layout: gnome"
+}
+
+apply() {
+  local name="$1" f
+  [[ -n "${EXTRA[$name]+x}" ]] || die "unknown layout '$name' (gnome|macos|winlike|chromeos)"
+  if [[ "$name" == gnome ]]; then
+    vanilla
+    return 0
+  fi
+  for f in "$LAYOUTS/base.dconf" "$LAYOUTS/$name.dconf"; do
+    [[ -r "$f" ]] || die "missing profile: $f"
+  done
+
+  # Warn (do not fail) if an extension this layout needs is not installed.
+  local u installed
+  layout_extensions "$name"
+  installed="$(gnome-extensions list)"
+  for u in "${ENABLED[@]}"; do
+    grep -qxF "$u" <<<"$installed" || echo "warning: extension not installed: $u" >&2
+  done
+
+  dconf load / < "$LAYOUTS/base.dconf"
+  dconf load / < "$LAYOUTS/$name.dconf"
+
+  gsettings set org.gnome.shell disable-user-extensions false
+  rewrite_enabled "${ENABLED[@]}"
+  clear_disabled "${ENABLED[@]}"
+
+  # The transparency preset and glass are the user's own choices: put them back on top of the new layout. Glass goes last because
+  # it owns the dock/taskbar/top bar transparency while it is on.
+  apply_opacity "$(opacity_current)"
+  if [[ "$(glass_current)" == on ]]; then
+    load_glass_profiles "$name"
+  else
+    unload_glass_profiles
+  fi
+
+  mkdir -p "$STATE_DIR"
+  echo "$name" > "$STATE_DIR/current"
+  record_release
+  echo "Applied layout: $name"
+  echo "If the extensions were just installed, log out and back in (Wayland cannot reload the shell)."
+}
+
+firstrun() {
+  # Run at login from /etc/xdg/autostart.
+  # 1) A user with no layout yet gets the site default, once (no layout named means vanilla GNOME, which the desktop already is).
+  # 2) A user who already has a layout is re-applied once when the package moves to a new release (MAJOR.MINOR), so new
+  #    profile values reach them. Their layout, glass switch and transparency preset are kept; only our own settings are rewritten.
+  #    A user with no recorded release (set up before this existed) is just recorded, not re-applied. Patch updates do nothing.
+  local cfg="${IMPERATOR_DEFAULT_LAYOUT_FILE:-/etc/imperator-layouts/default-layout}" name rel saved
+  rel="$(release)"
+  if [[ -e "$STATE_DIR/current" ]]; then
+    [[ -n "$rel" ]] || return 0
+    saved="$(cat "$RELEASE_STATE" 2>/dev/null || true)"
+    if [[ -z "$saved" ]]; then
+      record_release
+    elif [[ "$saved" != "$rel" ]]; then
+      echo "release $saved -> $rel: re-applying layout $(current)"
+      apply "$(current)"
+    fi
+    return 0
+  fi
+  [[ -r "$cfg" ]] || return 0
+  name="$(grep -vE '^[[:space:]]*(#|$)' "$cfg" | head -n1 | tr -d '[:space:]' || true)"
+  [[ -n "$name" ]] || return 0
+  apply "$name"
+}
+
+case "${1:-}" in
+  status) status ;;
+  check) check ;;
+  current) current ;;
+  opacity) shift; opacity "$@" ;;
+  glass) shift; glass "$@" ;;
+  firstrun) if command -v logger >/dev/null; then firstrun 2>&1 | logger -t imperator-layouts; else firstrun; fi ;;
+  gnome|macos|winlike|chromeos) apply "$1" ;;
+  *) die "usage: imperator-layout gnome|macos|winlike|chromeos|opacity [solid|soft|clear]|glass [on|off]|status|check|current|firstrun" ;;
+esac

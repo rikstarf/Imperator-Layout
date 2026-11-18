@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Desktop Layout
+Name[es]=Diseño del escritorio
+Comment=Choose how the desktop looks and behaves.
+Comment[es]=Elige cómo se ve y cómo funciona el escritorio.
+Exec=gjs -m /usr/share/imperator-layouts/imperator-layout-ui
+Icon=preferences-desktop-appearance
+Terminal=false
+Categories=Settings;GTK;
+StartupNotify=true

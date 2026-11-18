@@ -1,0 +1,199 @@
+#!/usr/bin/env -S gjs -m
+// Imperator desktop layout picker: four named layouts and four transparency presets, no pictures.
+// A thin GTK4/libadwaita front end over the `imperator-layout` script.
+// Strings are translated with gettext (domain "imperator-layouts"); Spanish ships in po/es.po.
+//
+// Run:  gjs -m imperator-layout-ui
+
+import Adw from 'gi://Adw?version=1';
+import Gettext from 'gettext';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import Gtk from 'gi://Gtk?version=4.0';
+import System from 'system';
+
+const DOMAIN = 'imperator-layouts';
+
+// Translations: IMPERATOR_LOCALEDIR (testing), else the per-user dir of a development install, else the system one.
+function localeDir() {
+    const env = GLib.getenv('IMPERATOR_LOCALEDIR');
+    if (env)
+        return env;
+    const user = GLib.build_filenamev([GLib.get_user_data_dir(), 'locale']);
+    const probe = GLib.build_filenamev([user, 'es', 'LC_MESSAGES', `${DOMAIN}.mo`]);
+    return GLib.file_test(probe, GLib.FileTest.EXISTS) ? user : '/usr/share/locale';
+}
+
+Gettext.bindtextdomain(DOMAIN, localeDir());
+Gettext.textdomain(DOMAIN);
+const _ = Gettext.gettext;
+
+// `id` is what the script expects. Titles go through gettext; keep the English text in sync with po/*.po.
+const LAYOUTS = [
+    {id: 'gnome', title: _('GNOME (default)')},
+    {id: 'winlike', title: _('Windows 11 like')},
+    {id: 'macos', title: _('Mac OS like')},
+    {id: 'chromeos', title: _('Chrome OS like')},
+];
+
+const OPACITIES = [
+    {id: 'solid', title: _('Solid')},
+    {id: 'soft', title: _('Soft')},
+    {id: 'clear', title: _('Clear')},
+];
+
+function scriptPath() {
+    const installed = GLib.build_filenamev(
+        [GLib.get_user_data_dir(), 'imperator-layouts', 'imperator-layout']);
+    return GLib.file_test(installed, GLib.FileTest.IS_EXECUTABLE) ? installed : 'imperator-layout';
+}
+
+// Run the switcher script and resolve with {ok, out, err}.
+function run(args) {
+    return new Promise((resolve, reject) => {
+        const proc = Gio.Subprocess.new(
+            [scriptPath(), ...args],
+            Gio.SubprocessFlags.STDOUT_PIPE | Gio.SubprocessFlags.STDERR_PIPE);
+        proc.communicate_utf8_async(null, null, (p, res) => {
+            try {
+                const [, out, err] = p.communicate_utf8_finish(res);
+                resolve({ok: p.get_successful(), out: (out ?? '').trim(), err: (err ?? '').trim()});
+            } catch (e) {
+                reject(e);
+            }
+        });
+    });
+}
+
+const lastLine = text => text.split('\n').filter(Boolean).pop() ?? _('unknown error');
+
+const app = new Adw.Application({
+    application_id: 'com.imperator.Layouts',
+    flags: Gio.ApplicationFlags.DEFAULT_FLAGS,
+});
+
+app.connect('activate', () => {
+    const existing = app.active_window;
+    if (existing) {
+        existing.present();
+        return;
+    }
+
+    const win = new Adw.ApplicationWindow({
+        application: app,
+        title: _('Desktop Layout'),
+        default_width: 420,
+        default_height: 560,
+    });
+
+    const toasts = new Adw.ToastOverlay();
+    const view = new Adw.ToolbarView();
+    view.add_top_bar(new Adw.HeaderBar());
+
+    const page = new Adw.PreferencesPage();
+    const layoutGroup = new Adw.PreferencesGroup({
+        title: _('Desktop layout'),
+        description: _('Choose how the desktop looks and behaves.'),
+    });
+    const opacityGroup = new Adw.PreferencesGroup({
+        title: _('Transparency'),
+        description: _('Applies to the dock or taskbar of the chosen layout.'),
+    });
+    const glassGroup = new Adw.PreferencesGroup();
+    const glassRow = new Adw.SwitchRow({
+        title: _('Glass effect'),
+        subtitle: _('Blur behind the dock, menus and overview, and a see-through top bar.'),
+    });
+    glassGroup.add(glassRow);
+    page.add(layoutGroup);
+    page.add(glassGroup);
+    page.add(opacityGroup);
+    view.set_content(page);
+    toasts.set_child(view);
+    win.set_content(toasts);
+
+    const layoutButtons = new Map();
+    const opacityButtons = new Map();
+    let updating = false;   // true while we set the selection from code, not from a click
+
+    const toast = (title, timeout = 3) =>
+        toasts.add_toast(new Adw.Toast({title, timeout}));
+
+    // Select whatever the script says is current. No layout applied yet means vanilla GNOME.
+    async function refresh() {
+        let layout = 'gnome';
+        let opacity = 'solid';
+        let glass = false;
+        try {
+            const l = await run(['current']);
+            if (l.ok && layoutButtons.has(l.out))
+                layout = l.out;
+            const o = await run(['opacity']);
+            if (o.ok && opacityButtons.has(o.out))
+                opacity = o.out;
+            const g = await run(['glass']);
+            if (g.ok)
+                glass = g.out === 'on';
+        } catch (e) {
+            // Script missing: keep the defaults; applying will report the error.
+        }
+        updating = true;
+        layoutButtons.get(layout).active = true;
+        opacityButtons.get(opacity).active = true;
+        glassRow.active = glass;
+        updating = false;
+        glassGroup.sensitive = layout !== 'gnome';   // blur and the glass top bar come from our extensions
+        opacityGroup.sensitive = layout !== 'gnome';   // vanilla GNOME has no dock or taskbar of ours
+    }
+
+    async function apply(args, okMessage, failMessage) {
+        page.sensitive = false;
+        try {
+            const r = await run(args);
+            if (r.ok)
+                toast(okMessage);
+            else
+                toast(failMessage.replace('%s', lastLine(r.err)), 10);
+        } catch (e) {
+            toast(_('Could not run imperator-layout: %s').replace('%s', e.message), 10);
+        }
+        await refresh();
+        page.sensitive = true;
+    }
+
+    function addRows(group, items, buttons, onSelect) {
+        let first = null;
+        for (const item of items) {
+            const check = new Gtk.CheckButton({valign: Gtk.Align.CENTER});
+            if (first)
+                check.set_group(first);
+            else
+                first = check;
+
+            const row = new Adw.ActionRow({title: item.title, activatable_widget: check});
+            row.add_prefix(check);
+            group.add(row);
+            buttons.set(item.id, check);
+
+            check.connect('toggled', btn => {
+                if (btn.active && !updating)
+                    onSelect(item.id);
+            });
+        }
+    }
+
+    addRows(layoutGroup, LAYOUTS, layoutButtons, id =>
+        apply([id], _('Layout applied'), _('Could not apply layout: %s')));
+    addRows(opacityGroup, OPACITIES, opacityButtons, id =>
+        apply(['opacity', id], _('Transparency applied'), _('Could not apply transparency: %s')));
+
+    glassRow.connect('notify::active', row => {
+        if (!updating)
+            apply(['glass', row.active ? 'on' : 'off'], _('Glass changed. Files was closed to apply it; reopen other apps to see it.'), _('Could not apply glass: %s'));
+    });
+
+    win.present();
+    refresh();
+});
+
+app.runAsync([System.programInvocationName, ...(System.programArgs ?? [])]);

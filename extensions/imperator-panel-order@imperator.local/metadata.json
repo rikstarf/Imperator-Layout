@@ -1,0 +1,7 @@
+{
+  "uuid": "imperator-panel-order@imperator.local",
+  "name": "Imperator panel order",
+  "description": "Moves the Activities button and the clock to the right side of the top panel, and keeps them there after the panel is rebuilt (lock, unlock, session changes).",
+  "shell-version": ["45", "46", "47", "48", "49", "50", "51"],
+  "version": 1
+}

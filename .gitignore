@@ -1,0 +1,9 @@
+dist/
+*.rpm
+*.tgz
+*.src.rpm
+rpmbuild/
+__pycache__/
+*.pyc
+*.swp
+*~
