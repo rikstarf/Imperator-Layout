@@ -1,0 +1,40 @@
+/*
+ * Imperator glass, dark color scheme. Loaded after glass.css only while glass is on and the system is dark: the pale tints become
+ * dark ones, so nothing looks white-washed. Blur My Shell supplies the dark blur itself (automatic pipeline and style).
+ */
+
+/* Dock: a faint dark tint over the dark blur, thinner light rim. */
+#dashtodockContainer #dash .dash-background {
+  background-color: rgba(20, 20, 24, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Control panel (quick settings): same dark tint, same rim. */
+.quick-settings.quick-settings.quick-settings {
+  background-color: rgba(20, 20, 24, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.quick-settings.quick-settings .quick-toggle,
+.quick-settings.quick-settings .quick-menu-toggle,
+.quick-settings.quick-settings .icon-button,
+.quick-settings.quick-settings .button {
+  background-color: rgba(255, 255, 255, 0.10);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+}
+.quick-settings.quick-settings .quick-toggle:checked,
+.quick-settings.quick-settings .quick-menu-toggle:checked,
+.quick-settings.quick-settings .quick-toggle:checked .quick-toggle {
+  background-color: -st-accent-color;
+}
+
+/* Calendar and notifications popover: no solid fill, only the dark blur behind it. */
+.datemenu-popover .popup-menu-content,
+.datemenu-popover .message-list .message,
+.datemenu-popover .calendar,
+.datemenu-popover .events-button,
+.datemenu-popover .world-clocks-button,
+.datemenu-popover .weather-button {
+  background-color: rgba(255, 255, 255, 0.06);
+}

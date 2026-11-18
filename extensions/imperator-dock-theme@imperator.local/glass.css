@@ -51,3 +51,9 @@
 .quick-settings.quick-settings .quick-toggle:checked .quick-toggle {
   background-color: -st-accent-color;
 }
+
+/* Workspace pill (the dot or pill next to Activities): white like the rest of the glass top bar. The light stylesheet makes it
+   dark for the light top bar; the overview keeps its dark pill because its own rule has the higher :overview selector. */
+#panel .panel-button#panelActivities .workspace-dot {
+  background-color: #ffffff;
+}

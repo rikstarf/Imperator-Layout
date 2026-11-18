@@ -22,6 +22,8 @@ export default class ImperatorDockTheme extends Extension {
         this._queuePanel();
         this._file = this.dir.get_child('light.css');
         this._glassFile = this.dir.get_child('glass.css');
+        this._glassDarkFile = this.dir.get_child('glass-dark.css');
+        this._glassDark = false;
         this._loaded = false;
         this._glassLoaded = false;
         this._id = this._settings.connect('changed::color-scheme', () => this._sync());
@@ -58,6 +60,7 @@ export default class ImperatorDockTheme extends Extension {
         this._settings = null;
         this._file = null;
         this._glassFile = null;
+        this._glassDarkFile = null;
     }
 
     _queuePanel() {
@@ -121,6 +124,10 @@ export default class ImperatorDockTheme extends Extension {
         try {
             this._theme().load_stylesheet(this._glassFile);
             this._glassLoaded = true;
+            // Dark scheme: glass-dark.css on top turns the pale tints into dark ones.
+            this._glassDark = this._settings.get_string('color-scheme') === 'prefer-dark';
+            if (this._glassDark)
+                this._theme().load_stylesheet(this._glassDarkFile);
         } catch (e) {
             console.error(`imperator-dock-theme: failed to load glass stylesheet: ${e}`);
         }
@@ -129,8 +136,11 @@ export default class ImperatorDockTheme extends Extension {
     _unloadGlass() {
         if (!this._glassLoaded)
             return;
+        if (this._glassDark)
+            this._theme().unload_stylesheet(this._glassDarkFile);
         this._theme().unload_stylesheet(this._glassFile);
         this._glassLoaded = false;
+        this._glassDark = false;
     }
 
     _reloadSheets() {
@@ -140,6 +150,8 @@ export default class ImperatorDockTheme extends Extension {
 
     _sync() {
         const light = this._settings.get_string('color-scheme') !== 'prefer-dark';
+        if (this._glassLoaded && this._glassDark === light)
+            this._unloadGlass();
         if (light && !this._loaded) {
             this._unloadGlass();
             try {

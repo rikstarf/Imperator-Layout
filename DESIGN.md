@@ -33,6 +33,7 @@ How the layouts work and why. Usage is in `README.md`, packaging in `PACKAGING.m
 
 ## Glass
 
+- Glass follows the color scheme: BMS pipelines and popup/dock styles are on automatic; `glass-dark.css` loads on top of `glass.css` in dark mode. Windows use their own stronger pipelines (`imperator_window_*`, set through the `pipelines` key in `glass.dconf`).
 - One switch, `imperator-layout glass on|off`, independent of layout and preset. It enables Blur My Shell (vendored, configured from
   dconf in `layouts/glass.dconf` and per-layout `glass-<layout>.dconf`): blur behind the dock, menus and overview, a see-through top
   bar with white text, and a dock-like tinted quick-settings panel. No refraction.

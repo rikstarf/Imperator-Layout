@@ -6,7 +6,7 @@
 %global extdir %{_datadir}/gnome-shell/extensions
 
 Name:           imperator-layouts
-Version:        1.4.1
+Version:        1.4.2
 Release:        1
 Summary:        Imperator desktop layouts (macOS-like, Windows 11-like, ChromeOS-like) for GNOME
 License:        GPL-2.0-or-later AND GPL-2.0-only AND GPL-3.0-or-later
@@ -90,6 +90,12 @@ install -Dpm 0644 packaging/RPM-GPG-KEY-imperator %{buildroot}%{_sysconfdir}/pki
 %{_sysconfdir}/pki/rpm-gpg/RPM-GPG-KEY-imperator
 
 %changelog
+* Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.4.2-1
+- Glass: application windows blur harder (radius 90 instead of 30)
+- Glass: dock, popups and every other blurred surface follow the light/dark scheme (automatic pipeline and style); dark mode no longer gets the white tint or white solid control panel and calendar
+- Glass: new glass-dark.css for the dark scheme (dark dock and control panel tints)
+- Glass: workspace pill is white on the see-through top bar in the light theme
+
 * Wed Nov 18 2026 Imperator Solutions <noreply@imperator.local> - 1.4.1-1
 - Picker: Updates row that opens GNOME Software's updates page (English and Spanish)
 - README: supported systems

@@ -2,8 +2,9 @@
 # a see-through top bar with white text comes from imperator-dock-theme (glass=true). Blur My Shell itself is enabled by the
 # imperator-layout script. Everything not listed keeps Blur My Shell's own defaults. Per-layout differences: glass-<layout>.dconf.
 #
-# Look: toward white. Every component uses BMS's built-in light pipeline (blur + 50% white) and the light popup/dock styles
-# (dark text on the pale glass), whatever the system color scheme is.
+# Look: follows the system color scheme. Every component runs in BMS's automatic pipeline mode: light scheme = blur + 50% white,
+# dark scheme = blur + darkening. The dock and popups use BMS's automatic style too, so dark mode gets dark glass, not a white tint.
+# Application windows get their own, stronger blur (the imperator_window_* pipelines below).
 [org/gnome/shell/extensions/imperator-dock-theme]
 glass=true
 
@@ -16,37 +17,36 @@ background-opacity=0.0
 trans-use-custom-opacity=true
 trans-panel-opacity=0.0
 
+# Pipelines: the two stock ones plus a stronger blur (radius 90 instead of 30) for application windows.
+[org/gnome/shell/extensions/blur-my-shell]
+pipelines={'pipeline_default': {'name': <'Default'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_000000000000'>, 'params': <{'unscaled_radius': <30>, 'brightness': <0.6>}>}>]>}, 'pipeline_default_light': {'name': <'Default (Light mode)'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_default_light_blur'>, 'params': <{'unscaled_radius': <30>, 'brightness': <1>}>}>, <{'type': <'color'>, 'id': <'effect_default_light_color'>, 'params': <{'color': <(1.0, 1.0, 1.0, 0.5)>, 'blend_mode': <3>}>}>]>}, 'imperator_window_light': {'name': <'Imperator window (light)'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_imperator_window_light_blur'>, 'params': <{'unscaled_radius': <90>, 'brightness': <1>}>}>, <{'type': <'color'>, 'id': <'effect_imperator_window_light_color'>, 'params': <{'color': <(1.0, 1.0, 1.0, 0.35)>, 'blend_mode': <3>}>}>]>}, 'imperator_window_dark': {'name': <'Imperator window (dark)'>, 'effects': <[<{'type': <'dual_kawase_blur'>, 'id': <'effect_imperator_window_dark_blur'>, 'params': <{'unscaled_radius': <90>, 'brightness': <0.6>}>}>]>}}
+
 [org/gnome/shell/extensions/blur-my-shell/panel]
 blur=true
-pipeline='pipeline_default_light'
-pipeline-auto-mode=false
+pipeline-auto-mode=true
 
 [org/gnome/shell/extensions/blur-my-shell/dash-to-dock]
 blur=true
 static-blur=false
-pipeline='pipeline_default_light'
-pipeline-auto-mode=false
-style-dash-to-dock=1
+pipeline-auto-mode=true
+style-dash-to-dock=3
 
 [org/gnome/shell/extensions/blur-my-shell/overview]
 blur=true
-pipeline='pipeline_default_light'
-pipeline-auto-mode=false
+pipeline-auto-mode=true
 
 [org/gnome/shell/extensions/blur-my-shell/appfolder]
-pipeline='pipeline_default_light'
-pipeline-auto-mode=false
+pipeline-auto-mode=true
 
 [org/gnome/shell/extensions/blur-my-shell/popup]
 blur=true
-pipeline='pipeline_default_light'
-pipeline-auto-mode=false
-style-popup=1
+pipeline-auto-mode=true
+style-popup=3
 # The quick settings panel (control panel) gets the dock's look WITHOUT blur: see glass.css.
 blur-quick-settings=false
 blur-submenus=false
 
-# Every application window: blurred backdrop (same pipeline as the dock), window made translucent so it shows through.
+# Every application window: blurred backdrop (stronger pipeline than the dock's), window made translucent so it shows through.
 # opacity is the window actor's alpha (0-255) and would fade the text and icons too, so it stays 255. The translucent backgrounds
 # come from the GTK CSS the script installs (layouts/glass-gtk4.css, glass-gtk3.css).
 [org/gnome/shell/extensions/blur-my-shell/applications]
@@ -54,8 +54,9 @@ blur=true
 enable-all=true
 # Static blur: the blurred wallpaper under each window. The live (dynamic) blur did not show on windows in the first VM look.
 static-blur=true
-pipeline='pipeline_default_light'
-pipeline-auto-mode=false
+pipeline-auto-mode=true
+pipeline-light='imperator_window_light'
+pipeline-dark='imperator_window_dark'
 dynamic-opacity=false
 blur-menus=true
 blur-on-overview=true
